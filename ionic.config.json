@@ -1,7 +1,0 @@
-{
-  "name": "wetunes",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}
