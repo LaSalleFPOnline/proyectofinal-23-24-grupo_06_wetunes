@@ -2,19 +2,34 @@
   <ion-menu side= "start" menuId= "m1" contentId="main-content" id="main">
     <ion-header>
       <ion-toolbar>
-        <ion-title>
-          WeTunes
-        </ion-title>
+        <!-- <ion-title>
+          <img class="logo" src="../assets/icon/LogoWetunes.jpg" alt="LogoWetunes"/>
+        </ion-title> -->
+        <img class="logo" src="../assets/icon/LogoWetunes.jpg" alt="LogoWetunes"/>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
       <ion-list>
       <ion-menu-toggle> <!--Para que se esconda una vez pulsado-->
-        <ion-item button [routerLink]="['/test-page']"> <!--Cambiar-->
-          <ion-label >Home</ion-label>
+        <ion-item button [routerLink]="['/test-page']">
+          <span class="material-symbols-outlined" slot="start">person</span>
+          <ion-label >Nombre usuario</ion-label>
         </ion-item>
-        <ion-item button [routerLink]="['/test-page']"> <!--Cambiar-->
-          <ion-label>TestPage</ion-label>
+        <ion-item button [routerLink]="['/test-page']">
+          <span class="material-symbols-outlined" slot="start">settings</span>
+          <ion-label>Ajustes</ion-label>
+        </ion-item>
+        <ion-item button [routerLink]="['/test-page']">
+          <span class="material-symbols-outlined" slot="start">share</span>
+          <ion-label>Compartir Fiesta</ion-label>
+        </ion-item>
+        <ion-item button [routerLink]="['/test-page']">
+          <span class="material-symbols-outlined" slot="start">tv</span>
+          <ion-label>Modo TV</ion-label>
+        </ion-item>
+        <ion-item button [routerLink]="['/login']">
+          <span class="material-symbols-outlined" slot="start">logout</span>
+          <ion-label>Salir Fiesta</ion-label>
         </ion-item>
       </ion-menu-toggle>
       </ion-list>
