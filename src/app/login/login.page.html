@@ -1,32 +1,31 @@
 <ion-header [translucent]="true" class="ion-header">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <!-- <ion-menu-button menu="m1"></ion-menu-button> -->
-    </ion-buttons>
     <ion-title>Login</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding ion-text-center">
   <div class="login-container">
-    <!-- <img src="../../assets/icon/LogoWetunes.jpg" alt="LogoWetunes" class="logo"> -->
     <h1>Iniciar Sesión</h1>
-    <form>
+    <form (ngSubmit)="onLogin()">
       <ion-item lines="full">
         <ion-label position="floating">Email o Usuario</ion-label>
-        <ion-input type="email"></ion-input>
+        <ion-input type="email" [(ngModel)]="user.email" name="email"></ion-input>
       </ion-item>
       <ion-item lines="full">
         <ion-label position="floating">Contraseña</ion-label>
-        <ion-input [type]="showPassword ? 'text' : 'password'"></ion-input>
+        <ion-input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="user.password" name="password"></ion-input>
         <span class="material-symbols-outlined icon-toggle" slot="end" (click)="togglePassword()">
           {{ showPassword ? 'visibility_off' : 'visibility' }}
         </span>
       </ion-item>
+      <ion-item lines="none" *ngIf="emailError">
+        <ion-label class="email-error-message ion-text-wrap">Formato de email incorrecto</ion-label>
+      </ion-item>
       <div class="forgot-password">
         <ion-button fill="clear" class="ion-no-padding">¿Olvidaste tu contraseña?</ion-button>
       </div>
-      <ion-button expand="block" class="login-button" [routerLink]="['/test-page']">Inicia</ion-button>
+      <ion-button type="submit" expand="block" class="login-button">Inicia</ion-button>
       <p class="register-link">¿Nuevo en WeTunes? <a href="/register">Regístrate</a></p>
     </form>
   </div>
