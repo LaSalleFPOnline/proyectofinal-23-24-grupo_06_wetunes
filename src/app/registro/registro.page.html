@@ -1,0 +1,36 @@
+<ion-header [translucent]="true" class="ion-header">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <!-- <ion-menu-button menu="m1"></ion-menu-button> -->
+      </ion-buttons>
+      <ion-title>Register</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content [fullscreen]="true" class="ion-padding ion-text-center">
+    <div class="login-container">
+      <!-- <img src="../../assets/icon/LogoWetunes.jpg" alt="LogoWetunes" class="logo"> -->
+      <h1>Registro</h1>
+      <form [formGroup]="regForm" (ngSubmit)="onSubmit()">
+        <ion-item lines="full">
+            <ion-label position="floating" >Nombre de Usuario</ion-label>
+            <ion-input type="text" formControlName="username"></ion-input>
+          </ion-item>
+        <ion-item lines="full">
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="floating">Contraseña</ion-label>
+          <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="passw"></ion-input>
+          <span class="material-symbols-outlined icon-toggle" slot="end" (click)="togglePassword()">
+            {{ showPassword ? 'visibility_off' : 'visibility' }}
+          </span>
+        </ion-item>
+
+        <ion-button type="submit" expand="block" class="register-button" >Registrate</ion-button>
+      </form>
+      <!-- [routerLink]="['/test-page']" -->
+    </div>
+  </ion-content>
+  
