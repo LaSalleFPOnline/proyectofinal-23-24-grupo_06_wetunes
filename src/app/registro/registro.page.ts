@@ -30,7 +30,7 @@ onSubmit(): void {
     const rawForm = this.regForm.getRawValue()
     this.authService.register(rawForm.email, rawForm.username, rawForm.passw)
     .subscribe(() => {
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/test-page');
     });
 }
 
