@@ -7,21 +7,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">TestPage</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-list>
-    @for (song of songs; track song._id) {
-      <ion-item>
-        <ion-thumbnail slot="start">
-          <img [src]="song.image" [alt]="song.name">
-        </ion-thumbnail>
-          <h3>{{song.name}}</h3>
-          <h3>{{song.category}}</h3>
-      </ion-item>
-    }
-  </ion-list>
+<ion-content padding>
+  <!-- Formulario con un campo de texto y un botón -->
+  <form (ngSubmit)="getArtistDetails(artistName)">
+    <ion-item>
+      <ion-label position="floating">Artist</ion-label>
+      <ion-input [(ngModel)]="artistName" name="artistName" type="text"></ion-input>
+    </ion-item>
+    <ion-button type="submit" expand="block">Find Artist</ion-button>
+  </form>
+  <!-- Ionic card que solo se muestra cuando obtenemos un resultado desde la API de Spotify -->
+  <ion-card *ngIf="artist">
+    <ion-card-header>
+      <ion-card-title>
+        <h2>{{ artist }}</h2>
+      </ion-card-title>
+    </ion-card-header>
+  </ion-card>
 </ion-content>
