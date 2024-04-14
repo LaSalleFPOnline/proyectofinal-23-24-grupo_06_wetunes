@@ -6,8 +6,8 @@ import { Song, SongsService } from '../services/songs.service';
 
 @Component({
   selector: 'app-test-page',
-  templateUrl: './test-page.page.html',
-  styleUrls: ['./test-page.page.scss'],
+  templateUrl: './test-page.html',
+  styleUrls: ['./test-page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })

@@ -1,13 +1,13 @@
 <ion-header [translucent]="true" class="ion-header">
   <ion-toolbar>
-    <ion-title>Login</ion-title>
+    <ion-title>Registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding ion-text-center">
   <div class="login-container">
-    <h1>Iniciar Sesión</h1>
-    <form (ngSubmit)="onLogin()">
+    <h1>Crear Cuenta</h1>
+    <form (ngSubmit)="singUp()">
       <ion-item lines="full">
         <ion-label position="floating">Email o Usuario</ion-label>
         <ion-input type="email" [(ngModel)]="user.email" name="email"></ion-input>
@@ -22,11 +22,8 @@
       <ion-item lines="none" *ngIf="emailError">
         <ion-label class="email-error-message ion-text-wrap">Formato de email incorrecto</ion-label>
       </ion-item>
-      <div class="forgot-password">
-        <ion-button fill="clear" class="ion-no-padding">¿Olvidaste tu contraseña?</ion-button>
-      </div>
-      <ion-button type="submit" expand="block" class="login-button">Inicia</ion-button>
-      <p class="register-link">¿Nuevo en WeTunes? <a href="/singup">Regístrate</a></p>
+      <ion-button type="submit" expand="block" class="login-button">Crear</ion-button>
     </form>
   </div>
 </ion-content>
+

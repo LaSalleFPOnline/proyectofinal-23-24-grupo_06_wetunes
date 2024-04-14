@@ -26,17 +26,30 @@ export class LoginPage implements OnInit {
   }
 
   onLogin() {
-    if (!this.validateEmail(this.user.email)) {
+
+    if (!this.validateEmail(this.user.email) && !this.validatePassword(this.user.password)) {
       this.emailError = true;
     } else {
       this.emailError = false;
       // Navigate only if the email is valid
-      this.router.navigate(['/test-page']);
+
+      /* this.fireAuth.signInWithEmailAndPassword(this.email, this.password) */
+      this.router.navigate(['home']);
     }
   }
 
   validateEmail(email: string): boolean {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
+  }
+  
+  validatePassword(password: string): boolean{
+
+    if(password.length > 6){
+      return true;
+    }else{
+      return false;
+    }
+    
   }
 }
