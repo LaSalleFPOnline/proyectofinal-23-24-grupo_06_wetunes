@@ -12,16 +12,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class TestPagePage implements OnInit {
-
-  artistName: string = ''; // Esta variable es la que está linkeada al formulario
-
-  artist: string | null = null; // Esta es donde muestro el resultado de lo que obtengo de Spotify
+  artistName: string = ''; // Variable vinculada al formulario
+  artist: string | null = null; // Aquí se mostrará el nombre del artista
+  tracks: any[] = []; // Aquí almacenaremos las canciones
 
   constructor(private http: HttpClient) { }
 
+  ngOnInit() {}
 
   getArtistDetails(artistName: string) {
-    /** Este método lo que realmente hace es obtener el ACCESS_TOKEN para la API de Spotify. 
+    /** Este método lo que realmente hace es obtener el ACCESS_TOKEN para la API de Spotify.
      * Este ACCESS_TOKEN es lo necesario para poder realizar llamadas a la API de Spotify */
 
 
@@ -57,11 +57,25 @@ export class TestPagePage implements OnInit {
         console.log('Data obtained from Spotify API')
         console.log(data)
         this.artist = data.artists.items[0]?.name || 'Artist not found';
+
+        // Si se encuentra un artista, se llama al método para obtener las canciones
+        if (this.artist !== 'Artist not found') {
+          this.getArtistTracks(data.artists.items[0].id, token);
+        }
       });
   }
 
-
-  async ngOnInit() {
+   // Método privado para obtener las pistas más populares del artista
+  private getArtistTracks(artistId: string, token: string) {
+    // Encabezados de la solicitud HTTP con el token de autorización
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    // Petición HTTP GET para obtener las pistas más populares del artista
+    this.http.get(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`, { headers })
+      .subscribe((data: any) => {
+         // Asignación de las pistas obtenidas al array de tracks
+        this.tracks = data.tracks;
+      });
   }
-
 }
