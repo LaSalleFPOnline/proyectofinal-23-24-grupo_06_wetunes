@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
@@ -16,7 +16,7 @@ export class TestPagePage implements OnInit {
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public toastController: ToastController) { }
 
   ngOnInit() {}
 
@@ -78,4 +78,30 @@ export class TestPagePage implements OnInit {
         this.tracks = data.tracks;
       });
   }
+   formatMillisecondsToMinutes(milliseconds: number): string {
+    // Convertir milisegundos a minutos totales
+    const totalMinutes = Math.floor(milliseconds / 60000);
+    // Convertir milisegundos restantes a segundos
+    const remainingSeconds = Math.floor((milliseconds % 60000) / 1000);
+  
+    // Formatear minutos y segundos para asegurar que siempre tengan dos dígitos
+    const formattedMinutes = totalMinutes.toString().padStart(2, '0');
+    const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
+  
+    // Devolver el tiempo en formato 00:00
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+
+  async addTrackToPlaylist(track: any) {
+    // Aquí puedes añadir la lógica para agregar la canción realmente a la playlist.
+
+    // Mostrar un mensaje de confirmación.
+    const toast = await this.toastController.create({
+      message: 'Canción añadida correctamente!',
+      duration: 2000,
+      position: 'bottom',
+    });
+    toast.present();
+  }
+  
 }
