@@ -22,4 +22,8 @@ export class AuthService {
         .then(() => {})
         return from(promise);
     }
+
+    getAuthState() {
+        return this.firebaseAuth.currentUser;
+      }
 }

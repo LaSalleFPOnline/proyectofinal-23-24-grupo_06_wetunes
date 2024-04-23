@@ -39,13 +39,17 @@ async onSubmit() {
       nombre: rawForm.nombre,
       email: rawForm.email,
       password: rawForm.password,
+      playlistId: ''
     };
     this.authService.register(rawForm.email, rawForm.nombre, rawForm.password)
     .subscribe({
       next: async () => {
         this.router.navigateByUrl('/test-page');
-        const response = await this.firestoreService.addUser(usuario);
-        console.log(response);
+        const user = this.authService.getAuthState()
+        if(user)
+           await this.firestoreService.addUser(usuario, user.uid);
+        else 
+           await this.firestoreService.addUserWithoutId(usuario);
       },
       error: (err) => {
         this.errorMessage = err.code;

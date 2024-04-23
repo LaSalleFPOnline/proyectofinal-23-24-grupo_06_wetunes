@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-test-page',
@@ -16,7 +17,7 @@ export class TestPagePage implements OnInit {
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
 
-  constructor(private http: HttpClient, public toastController: ToastController) { }
+  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService) { }
 
   ngOnInit() {}
 
@@ -94,6 +95,20 @@ export class TestPagePage implements OnInit {
 
   async addTrackToPlaylist(track: any) {
     // Aquí puedes añadir la lógica para agregar la canción realmente a la playlist.
+
+    /*
+    1- Necesitamos obtener el playlistId del usuario actual, en caso de que no tenga,
+      significa que es la primera vez que va a añadir una canción, por lo tanto
+      tenemos que crear una playlist nueva y asignarle el id al usuario
+
+    2- Si no tenemos id, crear el objeto con los ids de las canciones y al insertar el playlist
+      en firebase ya nos dará el id que lo ponemos al usuario
+    
+    3- si si lo tenemos, simplemente añadir dicha canción al array de objetos existentes
+      en firebase
+    */
+
+      console.log(this.authService.getAuthState())
 
     // Mostrar un mensaje de confirmación.
     const toast = await this.toastController.create({
