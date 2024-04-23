@@ -42,17 +42,17 @@ async onSubmit() {
     };
     this.authService.register(rawForm.email, rawForm.nombre, rawForm.password)
     .subscribe({
-      next: () => {
+      next: async () => {
         this.router.navigateByUrl('/test-page');
+        const response = await this.firestoreService.addUser(usuario);
+        console.log(response);
       },
       error: (err) => {
         this.errorMessage = err.code;
         console.log(this.errorMessage);
       }
-        
     });
-    const response = await this.firestoreService.addUser(usuario);
-    console.log(response);
+    
   } 
 }
 
