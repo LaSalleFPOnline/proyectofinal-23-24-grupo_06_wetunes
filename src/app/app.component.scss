@@ -1,0 +1,25 @@
+ion-header {
+  --min-height: 50px;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 100%;
+  margin: 0 auto;
+}
+// .logo {
+//   width: 150px;
+//   height: auto;
+// }
+ion-menu {
+  ion-content {
+    --ion-background-color: var(--gunmetal-2);
+    ion-item,
+    ion-label {
+      color: #fffffa;
+    }
+  }
+}
+
+

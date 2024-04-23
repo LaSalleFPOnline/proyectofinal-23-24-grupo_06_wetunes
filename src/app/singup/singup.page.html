@@ -1,0 +1,29 @@
+<ion-header [translucent]="true" class="ion-header">
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding ion-text-center">
+  <div class="login-container">
+    <h1>Crear Cuenta</h1>
+    <form (ngSubmit)="singUp()">
+      <ion-item lines="full">
+        <ion-label position="floating">Email o Usuario</ion-label>
+        <ion-input type="email" [(ngModel)]="user.email" name="email"></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="user.password" name="password"></ion-input>
+        <span class="material-symbols-outlined icon-toggle" slot="end" (click)="togglePassword()">
+          {{ showPassword ? 'visibility_off' : 'visibility' }}
+        </span>
+      </ion-item>
+      <ion-item lines="none" *ngIf="emailError">
+        <ion-label class="email-error-message ion-text-wrap">Formato de email incorrecto</ion-label>
+      </ion-item>
+      <ion-button type="submit" expand="block" class="login-button">Crear</ion-button>
+    </form>
+  </div>
+</ion-content>
+
