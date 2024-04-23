@@ -7,7 +7,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { Firestore } from '@angular/fire/firestore';
 import { FirestoreService } from '../services/firestore.service';
-import { UserInterface } from '../user.interface';
+import { UserInterface } from '../interfaces/user.interface';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
@@ -16,49 +16,46 @@ import { UserInterface } from '../user.interface';
   imports: [IonicModule, CommonModule, FormsModule, RouterLink, ReactiveFormsModule, HttpClientModule]
 })
 export class RegistroPage implements OnInit {
-    constructor(
-        private fb: FormBuilder, 
-        private router: Router, 
-        private authService: AuthService,
-        private http : HttpClient,
-        private firestoreService: FirestoreService
-    ) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private http: HttpClient,
+    private firestoreService: FirestoreService
+  ) { }
 
-regForm = this.fb.nonNullable.group({
+  regForm = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
     email: ['', Validators.required],
     password: ['', Validators.required],
-});
+  });
 
-errorMessage: string | null = null;
+  errorMessage: string | null = null;
 
-async onSubmit() {
-  if(this.regForm.valid){
-    const rawForm = this.regForm.getRawValue();
-    const usuario: UserInterface = {
-      nombre: rawForm.nombre,
-      email: rawForm.email,
-      password: rawForm.password,
-      playlistId: ''
-    };
-    this.authService.register(rawForm.email, rawForm.nombre, rawForm.password)
-    .subscribe({
-      next: async () => {
-        this.router.navigateByUrl('/test-page');
-        const user = this.authService.getAuthState()
-        if(user)
-           await this.firestoreService.addUser(usuario, user.uid);
-        else 
-           await this.firestoreService.addUserWithoutId(usuario);
-      },
-      error: (err) => {
-        this.errorMessage = err.code;
-        console.log(this.errorMessage);
-      }
-    });
-    
-  } 
-}
+  async onSubmit() {
+    if (this.regForm.valid) {
+      const rawForm = this.regForm.getRawValue();
+      const usuario: UserInterface = {
+        nombre: rawForm.nombre,
+        email: rawForm.email,
+        password: rawForm.password,
+        playlistId: ''
+      };
+      this.authService.register(rawForm.email, rawForm.nombre, rawForm.password)
+        .subscribe({
+          next: async () => {
+            this.router.navigateByUrl('/test-page');
+            const user = this.authService.getAuthState()
+            await this.firestoreService.addUser(usuario, user.uid);
+          },
+          error: (err) => {
+            this.errorMessage = err.code;
+            console.log(this.errorMessage);
+          }
+        });
+
+    }
+  }
 
   ngOnInit() {
     const showPassword = false;
