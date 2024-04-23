@@ -37,7 +37,7 @@
              [alt]="track.name + ' album cover'">
       </ion-avatar>
       <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
-      <ion-button slot="end" (click)="addTrackToPlaylist(track)">Add to Playlist</ion-button>
+      <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
     </ion-item>
   </ion-list>
 </ion-content>

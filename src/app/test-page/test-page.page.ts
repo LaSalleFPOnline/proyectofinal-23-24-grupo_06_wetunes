@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { FirestoreService } from '../services/firestore.service';
 
 @Component({
   selector: 'app-test-page',
@@ -17,7 +18,7 @@ export class TestPagePage implements OnInit {
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
 
-  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService) { }
+  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService) { }
 
   ngOnInit() {}
 
@@ -93,7 +94,7 @@ export class TestPagePage implements OnInit {
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
-  async addTrackToPlaylist(track: any) {
+  async addTrackToPlaylist(songId: string) {
     // Aquí puedes añadir la lógica para agregar la canción realmente a la playlist.
 
     /*
@@ -108,7 +109,18 @@ export class TestPagePage implements OnInit {
       en firebase
     */
 
-      console.log(this.authService.getAuthState())
+      const playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
+
+      if(!playlistId){
+        // Significa que la playlistId aún no existe, por lo tanto tenemos que crearla de 0 y asignarla
+        // Creamos la nueva playlist y obtenemos el id
+        const newPlaylistId = await this.fireStoreService.createPlaylistWithSong(songId);
+        // A continuación, actualizaremos el usuario para ponerle esta playlistId
+        await this.fireStoreService.updateUserPlaylistId(this.authService.getAuthState().uid, newPlaylistId);
+      } else {
+        // Significa que ya existe, por lo tanto solo tenemos que "pushear" una nueva canción
+
+      }
 
     // Mostrar un mensaje de confirmación.
     const toast = await this.toastController.create({
