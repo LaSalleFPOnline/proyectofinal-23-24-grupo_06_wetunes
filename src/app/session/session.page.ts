@@ -47,7 +47,8 @@ export class SessionPage implements OnInit {
 
     if (userPlaylistId) {
       const newSession: SessionInterface = {
-        playlistId: userPlaylistId
+        playlistId: userPlaylistId,
+        adminUserId: userId
       };
 
       await this.fireStoreService.addSession(newSession, sessionId);
