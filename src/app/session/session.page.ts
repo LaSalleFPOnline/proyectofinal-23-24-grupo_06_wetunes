@@ -16,10 +16,26 @@ import { SessionInterface } from '../interfaces/session.interface';
 })
 export class SessionPage implements OnInit {
   sessionId: string = '';
+  isInSession: boolean = false;
+  isSessionAdmin: boolean = false;
 
   constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.checkSessionStatus();
+  }
+
+  async checkSessionStatus(): Promise<void> {
+    const userId = this.authService.getAuthState().uid;
+    const user = await this.fireStoreService.retrieveUser(userId);
+    if(user.sessionId != ''){
+      this.isInSession = true;
+      const session = await this.fireStoreService.retrieveSession(user.sessionId);
+      if(session.adminUserId == userId) {
+        this.isSessionAdmin = true;
+      }
+    }
+  }
 
   generateRandomString(): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
