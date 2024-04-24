@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Firestore, collection, addDoc, doc, setDoc, getDoc, updateDoc } from "@angular/fire/firestore";
 import { UserInterface } from "../interfaces/user.interface";
 import { PlaylistInterface } from "../interfaces/playlist.interface";
+import { SessionInterface } from "../interfaces/session.interface";
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +21,22 @@ export class FirestoreService {
     return addDoc(userRef, user);
   }
 
+  addSession(session: SessionInterface, sessionId: string) {
+    const sessionRef = doc(this.firestore, 'sesiones', sessionId);
+    return setDoc(sessionRef, session);
+  }
+
+  async checkSession(sessionId: string): Promise<boolean> {
+    const sessionDocRef = doc(this.firestore, 'sesiones', sessionId); // Reference to the user document
+    const docSnapshot = await getDoc(sessionDocRef); // Fetch the document
+
+    if (docSnapshot.exists()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   async updateUserPlaylistId(userId: string, playlistId: string): Promise<void> {
     const userDocRef = doc(this.firestore, 'usuarios', userId); // Reference to the user document
 
@@ -31,6 +48,20 @@ export class FirestoreService {
     } catch (error) {
       console.error("Error updating user: ", error);
       throw new Error("Failed to update user playlistId"); // Optionally throw an error
+    }
+  }
+
+  async updateUserSessionId(userId: string, sessionId: string): Promise<void> {
+    const userDocRef = doc(this.firestore, 'usuarios', userId); // Reference to the user document
+
+    try {
+      await updateDoc(userDocRef, {
+        sessionId: sessionId // Update the sessionId field
+      });
+      console.log("User sessionId updated successfully");
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw new Error("Failed to update user sessionId"); // Optionally throw an error
     }
   }
 
