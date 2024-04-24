@@ -119,7 +119,7 @@ export class TestPagePage implements OnInit {
         await this.fireStoreService.updateUserPlaylistId(this.authService.getAuthState().uid, newPlaylistId);
       } else {
         // Significa que ya existe, por lo tanto solo tenemos que "pushear" una nueva canción
-
+        await this.fireStoreService.addSongToPlaylist(playlistId, songId);
       }
 
     // Mostrar un mensaje de confirmación.

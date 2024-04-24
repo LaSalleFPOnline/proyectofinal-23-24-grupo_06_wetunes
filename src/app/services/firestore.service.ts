@@ -66,4 +66,24 @@ export class FirestoreService {
       throw new Error("Failed to create playlist");  // Optionally throw an error
     }
   }
+
+  async addSongToPlaylist(playlistId: string, songId: string): Promise<void> {
+    const playlistDocRef = doc(this.firestore, 'playlists', playlistId); // Reference to the playlist document
+    const docSnapshot = await getDoc(playlistDocRef); // Fetch the document
+
+    if (docSnapshot.exists()) {
+      const playlistData = docSnapshot.data() as PlaylistInterface;
+      if (!playlistData.songIds.includes(songId)) {
+        playlistData.songIds.push(songId); // Add songId to the list of song IDs in the playlist
+
+        // Update the playlist object in Firebase
+        await updateDoc(playlistDocRef, {
+          songIds: playlistData.songIds
+        });
+      }
+    } else {
+      // If the playlist does not exist, throw an error or handle as needed
+      throw new Error('Playlist not found');
+    }
+  }
 }
