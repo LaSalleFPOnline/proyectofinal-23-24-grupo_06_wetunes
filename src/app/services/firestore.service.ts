@@ -16,6 +16,30 @@ export class FirestoreService {
     return setDoc(userRef, user);
   }
 
+  async retrieveUser(userId: string): Promise<UserInterface> {
+    const userDocRef = doc(this.firestore, 'usuarios', userId);
+    const docSnapshot = await getDoc(userDocRef);
+
+    if (docSnapshot.exists()) {
+      const userData = docSnapshot.data() as UserInterface;
+      return userData
+    } else {
+      throw new Error('User doesnt exist')
+    }
+  }
+
+  async retrieveSession(sessionId: string): Promise<SessionInterface> {
+    const sessionDocRef = doc(this.firestore, 'sesiones', sessionId);
+    const docSnapshot = await getDoc(sessionDocRef);
+
+    if (docSnapshot.exists()) {
+      const sessionData = docSnapshot.data() as SessionInterface;
+      return sessionData
+    } else {
+      throw new Error('Session doesnt exist')
+    }
+  }
+
   addUserWithoutId(user: UserInterface) {
     const userRef = collection(this.firestore, 'usuarios');
     return addDoc(userRef, user);
