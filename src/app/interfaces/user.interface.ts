@@ -3,4 +3,5 @@ export interface UserInterface {
     email: string;
     password: string;
     playlistId: string;
+    sessionId: string;
 }
