@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Firestore, collection, addDoc, doc, setDoc, getDoc, updateDoc } from "@angular/fire/firestore";
+import { Firestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, query, where, getDocs } from "@angular/fire/firestore";
 import { UserInterface } from "../interfaces/user.interface";
 import { PlaylistInterface } from "../interfaces/playlist.interface";
 import { SessionInterface } from "../interfaces/session.interface";
@@ -139,6 +139,27 @@ export class FirestoreService {
     } else {
       // If the playlist does not exist, throw an error or handle as needed
       throw new Error('Playlist not found');
+    }
+  }
+
+  async clearSessionId(currentSessionId: string): Promise<void> {
+    try {
+      // Query the documents with the specific sessionId
+      const snapshot = await getDocs(query(collection(this.firestore, "usuarios"), where("sessionId", "==", currentSessionId)));
+
+      if (snapshot.empty) {
+        console.log('No matching documents.');
+        return;
+      }
+
+      snapshot.forEach(async doc => {
+        let key : string = doc.id
+        await this.updateUserSessionId(key, "")
+      });
+
+      console.log('Session IDs cleared successfully.');
+    } catch (error) {
+      console.error('Error updating documents: ', error);
     }
   }
 }
