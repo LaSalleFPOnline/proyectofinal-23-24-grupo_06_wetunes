@@ -29,6 +29,7 @@ export class SessionPage implements OnInit {
     const userId = this.authService.getAuthState().uid;
     const user = await this.fireStoreService.retrieveUser(userId);
     if(user.sessionId != ''){
+      this.sessionId = user.sessionId;
       this.isInSession = true;
       const session = await this.fireStoreService.retrieveSession(user.sessionId);
       if(session.adminUserId == userId) {
@@ -76,9 +77,38 @@ export class SessionPage implements OnInit {
         position: 'bottom',
       });
       toast.present();
+
+      this.isInSession = true;
+      this.sessionId = sessionId;
+      this.isSessionAdmin = true;
     } else {
       throw new Error("No tienes una playlist aún. Añade una canción al menos.")
     }
+  }
+
+  async exitExistingSession() {
+    const userId = this.authService.getAuthState().uid;
+    await this.fireStoreService.updateUserSessionId(userId, "");
+    this.sessionId = '';
+    this.isInSession = false;
+    this.isSessionAdmin = false;
+    const toast = await this.toastController.create({
+      message: 'Te has salido de la sesión correctamente!',
+      duration: 2000,
+      position: 'bottom',
+    });
+  }
+
+  async removeAndExitSession(){
+    await this.fireStoreService.clearSessionId(this.sessionId);
+    this.sessionId = '';
+    this.isInSession = false;
+    this.isSessionAdmin = false;
+    const toast = await this.toastController.create({
+      message: 'Te has salido de la sesión y ha sido borrada correctamente!',
+      duration: 2000,
+      position: 'bottom',
+    });
   }
 
   async joinExistingSession(): Promise<void> {
@@ -96,6 +126,7 @@ export class SessionPage implements OnInit {
         duration: 2000,
         position: 'bottom',
       });
+      this.isInSession = true;
     } else {
       // En caso contrario, mostramos toast de error
       const toast = await this.toastController.create({
