@@ -38,6 +38,11 @@
       </ion-avatar>
       <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
+      <ion-button slot=""  (click)="playTrack(track.preview_url)"></ion-button>
+      <ion-icon svg="assets/play-circle-outline.svg"></ion-icon>
+
     </ion-item>
   </ion-list>
+  <!-- For modern browsers -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </ion-content>

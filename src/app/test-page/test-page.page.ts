@@ -5,6 +5,8 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
+import { SpotifyService } from '../services/spotify.service';
+
 
 @Component({
   selector: 'app-test-page',
@@ -18,7 +20,7 @@ export class TestPagePage implements OnInit {
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
 
-  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService) { }
+  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, private spotifyService: SpotifyService) { }
 
   ngOnInit() {}
 
@@ -131,4 +133,14 @@ export class TestPagePage implements OnInit {
     toast.present();
   }
   
+  getTrackDetails() {
+    const token = 'your_access_token'; // This should be dynamically obtained from the URL or storage
+    this.spotifyService.getTrack(token, 'track_id_here').subscribe(track => {
+      console.log(track);
+    });
+  }
+  playTrack(previewUrl: string): void {
+    const audio = new Audio(previewUrl);
+    audio.play().catch(error => console.error("Playback error:", error));
+  }
 }
