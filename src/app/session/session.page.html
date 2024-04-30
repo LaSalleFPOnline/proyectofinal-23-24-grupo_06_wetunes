@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content padding>
-  <h1>Administrar sesión <span *ngIf="sessionId != ''">{{sessionId}}</span></h1>
+  <h1>Administrar sesión <span *ngIf="sessionId !== ''">{{sessionId}}</span></h1>
   <div *ngIf="!isInSession">
     <ion-card>
       <ion-card-header>
