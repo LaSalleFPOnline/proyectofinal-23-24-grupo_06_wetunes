@@ -36,7 +36,7 @@
              [src]="track.album.images[2].url" 
              [alt]="track.name + ' album cover'">
       </ion-avatar>
-      <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
+      <ion-label (click)="goToTvMode(track)">{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track)">Add to Playlist</ion-button>
     </ion-item>
   </ion-list>

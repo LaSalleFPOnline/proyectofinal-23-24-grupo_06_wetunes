@@ -3,31 +3,40 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-test-page',
-  templateUrl: './test-page.page.html',
-  styleUrls: ['./test-page.page.scss'],
+  selector: 'app-tvmode',
+  templateUrl: './tvmode.page.html',
+  styleUrls: ['./tvmode.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class TestPagePage implements OnInit {
+export class TvmodePage implements OnInit {
   artistName: string = ''; // Variable vinculada al formulario
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
-  trackId: string | undefined;
+  artistSelected: string = '';
+  trackName: string = '';
+  
 
-  constructor(private http: HttpClient, public toastController: ToastController, public router: Router) { }
+  constructor(private http: HttpClient, public toastController: ToastController, private router: Router, public activatedRoute: ActivatedRoute) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    const artistSelected = this.activatedRoute.snapshot.paramMap.get('artistSelected');
+    const trackId = this.activatedRoute.snapshot.paramMap.get('trackId');
+   
+    if(artistSelected && trackId){
+      this.artistName = artistSelected;
+      this.trackName = trackId;
+    }
+
+    this.getArtistDetails(this.artistName);
+
+  }
 
   getArtistDetails(artistName: string) {
-    /** Este método lo que realmente hace es obtener el ACCESS_TOKEN para la API de Spotify.
-     * Este ACCESS_TOKEN es lo necesario para poder realizar llamadas a la API de Spotify */
-
-
-    /** Docs: https://developer.spotify.com/documentation/web-api/tutorials/getting-started  */
 
     const clientId = '0e2fa6d6a1ad4ae4b7d05797746fcaa5';
     const clientSecret = 'ef98271d9a204ca8acb9689c1d4139e5';
@@ -40,10 +49,7 @@ export class TestPagePage implements OnInit {
     this.http.post('https://accounts.spotify.com/api/token', body, { headers })
       .subscribe((data: any) => {
         // Esto se ejecuta una vez Spotify responda a nuestra petición de obtener el token
-        //console.log('Access token obtained from API Spotify')
-       // console.log(data) // Pintamos el token por consola - OPCIONAL
-        console.log(artistName)
-        artistName = this.artistName;
+       
         this.searchArtist(artistName, data.access_token);
       });
   }
@@ -81,42 +87,5 @@ export class TestPagePage implements OnInit {
          // Asignación de las pistas obtenidas al array de tracks
         this.tracks = data.tracks;
       });
-  }
-   formatMillisecondsToMinutes(milliseconds: number): string {
-    // Convertir milisegundos a minutos totales
-    const totalMinutes = Math.floor(milliseconds / 60000);
-    // Convertir milisegundos restantes a segundos
-    const remainingSeconds = Math.floor((milliseconds % 60000) / 1000);
-  
-    // Formatear minutos y segundos para asegurar que siempre tengan dos dígitos
-    const formattedMinutes = totalMinutes.toString().padStart(2, '0');
-    const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
-  
-    // Devolver el tiempo en formato 00:00
-    return `${formattedMinutes}:${formattedSeconds}`;
-  }
-
-  async addTrackToPlaylist(track: any) {
-    // Aquí puedes añadir la lógica para agregar la canción realmente a la playlist.
-
-    // Mostrar un mensaje de confirmación.
-    const toast = await this.toastController.create({
-      message: 'Canción añadida correctamente!',
-      duration: 2000,
-      position: 'bottom',
-    });
-    toast.present();
-  }
-
-  goToTvMode(track: any){
-    
-    console.log(track.id);
-    const trackId = track.id;
-
-    const artistSelected = this.artistName;
-    this.router.navigate(['/tvmode/' + artistSelected +'/'+ trackId]);
-
-
-  }
-  
+  }  
 }

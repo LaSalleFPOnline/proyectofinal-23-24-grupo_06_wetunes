@@ -10,5 +10,9 @@ export const routes: Routes = [
   },
   {
     path: 'register', loadComponent: () => import('./registro/registro.page').then(m => m.RegistroPage)
+  },
+  {
+    path: 'tvmode/:artistSelected/:trackId',
+    loadComponent: () => import('./tvmode/tvmode.page').then( m => m.TvmodePage)
   }
 ];
