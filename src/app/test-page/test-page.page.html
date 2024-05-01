@@ -1,24 +1,30 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <ion-buttons slot="start">
       <ion-menu-button menu="m1"></ion-menu-button>
     </ion-buttons>
-    <ion-title>TestPage</ion-title>
+    <ion-title class="ion-text-center">Search Page</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <form (ngSubmit)="getArtistDetails(artistName)">
-    <ion-item>
-      <ion-label position="floating">Artist</ion-label>
-      <ion-input [(ngModel)]="artistName" name="artistName" type="text"></ion-input>
-    </ion-item>
-    <ion-button type="submit" expand="block">Find Artist</ion-button>
-  </form>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form (ngSubmit)="getArtistDetails(artistName)">
+          <ion-item >
+            <ion-label position="floating" color="tertiary">Artist</ion-label>
+            <ion-input [(ngModel)]="artistName" name="artistName" type="text" color="tertiary"></ion-input>
+          </ion-item>
+          <ion-button type="submit" expand="block" color="primary">Find Artist</ion-button>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
   <ion-card *ngIf="artist">
-    <ion-card-header>
-      <ion-card-title>
+    <ion-card-header color="dark">
+      <ion-card-title color="tertiary">
         <h2>{{ artist }}</h2>
       </ion-card-title>
     </ion-card-header>
@@ -27,7 +33,7 @@
   <!-- Sección para mostrar las canciones -->
   <ion-list *ngIf="tracks.length > 0">
     <ion-list-header>
-      <ion-label>Top Tracks</ion-label>
+    <h3>Top Tracks</h3>
     </ion-list-header>
     <ion-item *ngFor="let track of tracks">
       <ion-avatar slot="start">
@@ -36,7 +42,7 @@
              [src]="track.album.images[2].url" 
              [alt]="track.name + ' album cover'">
       </ion-avatar>
-      <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
+      <ion-label color="tertiary">{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
     </ion-item>
   </ion-list>

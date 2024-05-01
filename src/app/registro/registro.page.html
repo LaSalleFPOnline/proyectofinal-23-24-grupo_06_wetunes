@@ -1,16 +1,16 @@
 <ion-header [translucent]="true" class="ion-header">
-    <ion-toolbar>
+    <ion-toolbar color="dark">
       <ion-buttons slot="start">
         <!-- <ion-menu-button menu="m1"></ion-menu-button> -->
       </ion-buttons>
-      <ion-title>Register</ion-title>
+      <ion-title>Nuevo Usuario</ion-title>
     </ion-toolbar>
   </ion-header>
   
   <ion-content [fullscreen]="true" class="ion-padding ion-text-center">
     <div class="login-container">
       <!-- <img src="../../assets/icon/LogoWetunes.jpg" alt="LogoWetunes" class="logo"> -->
-      <h1>Registro</h1>
+      <h1>Registrate en WeTunes</h1>
       <form [formGroup]="regForm" (ngSubmit)="onSubmit()">
         <ion-item lines="full">
             <ion-label position="floating" >Nombre de Usuario</ion-label>
