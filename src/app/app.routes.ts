@@ -4,9 +4,13 @@ export const routes: Routes = [
   { 
     path: '', loadComponent: ()=> import('./login/login.page').then(m => m.LoginPage) 
   },
+  { 
+    path: 'login', loadComponent: ()=> import('./login/login.page').then(m => m.LoginPage) 
+  },
+
   {
-    path: 'test-page',
-    loadComponent: () => import('./test-page/test-page.page').then( m => m.TestPagePage)
+    path: 'search-page',
+    loadComponent: () => import('./search-page/search-page.page').then( m => m.TestPagePage)
   },
   {
     path: 'session',

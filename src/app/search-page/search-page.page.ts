@@ -6,11 +6,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
+import { Platform } from '@ionic/angular';
+
 
 @Component({
-  selector: 'app-test-page',
-  templateUrl: './test-page.page.html',
-  styleUrls: ['./test-page.page.scss'],
+  selector: 'app-search-page',
+  templateUrl: './search-page.page.html',
+  styleUrls: ['./search-page.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
@@ -20,9 +22,12 @@ export class TestPagePage implements OnInit {
   tracks: any[] = []; // Aquí almacenaremos las canciones
   trackId: string | undefined;
 
-  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, public router: Router) { }
+  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, public router: Router,
+    public platform: Platform) {
+     }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   getArtistDetails(artistName: string) {
     /** Este método lo que realmente hace es obtener el ACCESS_TOKEN para la API de Spotify.

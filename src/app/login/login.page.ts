@@ -14,7 +14,7 @@ import { AuthService } from '../services/auth.service';
   imports: [IonicModule, CommonModule, FormsModule, RouterLink, ReactiveFormsModule, HttpClientModule]
 })
 export class LoginPage implements OnInit {
-  showPassword = false;
+  showPassword = false
 
   fb = inject(FormBuilder);
   http = inject(HttpClient);
@@ -44,7 +44,7 @@ export class LoginPage implements OnInit {
     .login(rawForm.email, rawForm.password)
     .subscribe({
       next: () => {
-        this.router.navigateByUrl('/test-page');
+        this.router.navigateByUrl('/search-page');
       },
       error: (err) => {
         this.errorMessage = err.code;
