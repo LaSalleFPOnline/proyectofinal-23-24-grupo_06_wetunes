@@ -24,6 +24,7 @@ export class TestPagePage implements OnInit {
 
   constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, public router: Router,
     public platform: Platform) {
+      
      }
 
   ngOnInit() {

@@ -6,7 +6,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RegistroPage } from './registro/registro.page';
 import { LoginPage } from './login/login.page';
 import { CommonModule } from '@angular/common';
-import { Platform } from '@ionic/angular';
+import { SplitPaneService } from '../app/services/split-pane.service';
 
 @Component({
   selector: 'app-root',
@@ -20,12 +20,15 @@ import { Platform } from '@ionic/angular';
     HttpClientModule, 
     RegistroPage, 
     LoginPage, 
-    CommonModule],
+    CommonModule,
+    ],
 })
 export class AppComponent {
-  isLoginPage: boolean = false; // Variable para controlar la visibilidad del split-pane
-  constructor(private http: HttpClient, private router: Router, public platform: Platform) {
-    // Escucha los cambios de navegación para determinar si está en la página de login
+
+  constructor(private http: HttpClient, private router: Router, public splitPaneService: SplitPaneService) {
 
   }
+  ngOnInit(){    
+  }
+
 }
