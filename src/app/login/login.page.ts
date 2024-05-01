@@ -4,6 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { IonicModule } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -18,13 +19,14 @@ export class LoginPage implements OnInit {
   fb = inject(FormBuilder);
   http = inject(HttpClient);
   router = inject(Router);
+  authService = inject(AuthService);
 
   logForm = this.fb.nonNullable.group({
     email: ['', Validators.required],
-    passw: ['', Validators.required],
+    password: ['', Validators.required],
   });
 
-  constructor() { }
+  constructor(authService: AuthService) { }
 
   ngOnInit() {
     const showPassword = false;
@@ -35,8 +37,20 @@ export class LoginPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  errorMessage: string | null = null;
   onSubmit(): void {
-    console.log('Login');
+    const rawForm = this.logForm.getRawValue();
+    this.authService
+    .login(rawForm.email, rawForm.password)
+    .subscribe({
+      next: () => {
+        this.router.navigateByUrl('/test-page');
+      },
+      error: (err) => {
+        this.errorMessage = err.code;
+        console.log(this.errorMessage);
+      },
+    });
   }
 
 }

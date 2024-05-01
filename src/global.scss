@@ -25,6 +25,13 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+*{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
 :root {
-    --ion-background-color: #CACBBD;
+    --ion-background-color: #162D36;
+    ion-title, ion-label, ion-input, ion-item, h1, h2, h3, p {
+      color: #fffffa;
+    }
   }

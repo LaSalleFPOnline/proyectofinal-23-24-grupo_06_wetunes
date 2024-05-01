@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { FirestoreService } from '../services/firestore.service';
 
 @Component({
   selector: 'app-test-page',
@@ -18,7 +20,7 @@ export class TestPagePage implements OnInit {
   tracks: any[] = []; // Aquí almacenaremos las canciones
   trackId: string | undefined;
 
-  constructor(private http: HttpClient, public toastController: ToastController, public router: Router) { }
+  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, public router: Router) { }
 
   ngOnInit() {}
 
@@ -96,8 +98,33 @@ export class TestPagePage implements OnInit {
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
-  async addTrackToPlaylist(track: any) {
+  async addTrackToPlaylist(songId: string) {
     // Aquí puedes añadir la lógica para agregar la canción realmente a la playlist.
+
+    /*
+    1- Necesitamos obtener el playlistId del usuario actual, en caso de que no tenga,
+      significa que es la primera vez que va a añadir una canción, por lo tanto
+      tenemos que crear una playlist nueva y asignarle el id al usuario
+
+    2- Si no tenemos id, crear el objeto con los ids de las canciones y al insertar el playlist
+      en firebase ya nos dará el id que lo ponemos al usuario
+    
+    3- si si lo tenemos, simplemente añadir dicha canción al array de objetos existentes
+      en firebase
+    */
+
+      const playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
+
+      if(!playlistId){
+        // Significa que la playlistId aún no existe, por lo tanto tenemos que crearla de 0 y asignarla
+        // Creamos la nueva playlist y obtenemos el id
+        const newPlaylistId = await this.fireStoreService.createPlaylistWithSong(songId);
+        // A continuación, actualizaremos el usuario para ponerle esta playlistId
+        await this.fireStoreService.updateUserPlaylistId(this.authService.getAuthState().uid, newPlaylistId);
+      } else {
+        // Significa que ya existe, por lo tanto solo tenemos que "pushear" una nueva canción
+        await this.fireStoreService.addSongToPlaylist(playlistId, songId);
+      }
 
     // Mostrar un mensaje de confirmación.
     const toast = await this.toastController.create({

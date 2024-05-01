@@ -1,5 +1,5 @@
 <ion-header [translucent]="true" class="ion-header">
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <ion-buttons slot="start">
       <!-- <ion-menu-button menu="m1"></ion-menu-button> -->
     </ion-buttons>
@@ -12,13 +12,13 @@
     <!-- <img src="../../assets/icon/LogoWetunes.jpg" alt="LogoWetunes" class="logo"> -->
     <h1>Iniciar Sesión</h1>
     <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
-      <ion-item lines="full">
+      <ion-item>
         <ion-label position="floating">Email</ion-label>
-        <ion-input type="email" formControlName="email"></ion-input>
+        <ion-input type="email" formControlName="email" color="tertiary"></ion-input>
       </ion-item>
       <ion-item lines="full">
         <ion-label position="floating">Contraseña</ion-label>
-        <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="passw"></ion-input>
+        <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"></ion-input>
         <span class="material-symbols-outlined icon-toggle" slot="end" (click)="togglePassword()">
           {{ showPassword ? 'visibility_off' : 'visibility' }}
         </span>

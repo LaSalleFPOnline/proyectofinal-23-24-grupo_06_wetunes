@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Auth } from "@angular/fire/auth";
+import { Auth, User, signInWithEmailAndPassword } from "@angular/fire/auth";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Observable, from } from "rxjs";
 
@@ -8,12 +8,26 @@ import { Observable, from } from "rxjs";
 })
 
 export class AuthService {
-    constructor(private firebaseAuth: Auth){}
+    constructor(private firebaseAuth: Auth) { }
 
-    register(email: string, username: string, passw: string): Observable<void>{
+    register(email: string, username: string, passw: string): Observable<void> {
         const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, passw)
-        .then(response => updateProfile(response.user, {displayName: username}))
+            .then(response => updateProfile(response.user, { displayName: username }))
 
         return from(promise);
+    }
+
+    login(email: string, password: string): Observable<void> {
+        const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
+            .then(() => { })
+        return from(promise);
+    }
+
+    getAuthState(): User {
+        const user = this.firebaseAuth.currentUser
+        if (user)
+            return user;
+        else
+            throw new Error('user not logged');
     }
 }
