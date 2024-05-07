@@ -21,11 +21,12 @@ export class TestPagePage implements OnInit {
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
   trackId: string | undefined;
+  audio: HTMLMediaElement | null = null;
 
   constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, public router: Router,
     public platform: Platform) {
-      
-     }
+
+  }
 
   ngOnInit() {
   }
@@ -49,7 +50,7 @@ export class TestPagePage implements OnInit {
       .subscribe((data: any) => {
         // Esto se ejecuta una vez Spotify responda a nuestra petición de obtener el token
         //console.log('Access token obtained from API Spotify')
-       // console.log(data) // Pintamos el token por consola - OPCIONAL
+        // console.log(data) // Pintamos el token por consola - OPCIONAL
         console.log(artistName)
         artistName = this.artistName;
         this.searchArtist(artistName, data.access_token);
@@ -77,7 +78,7 @@ export class TestPagePage implements OnInit {
       });
   }
 
-   // Método privado para obtener las pistas más populares del artista
+  // Método privado para obtener las pistas más populares del artista
   private getArtistTracks(artistId: string, token: string) {
     // Encabezados de la solicitud HTTP con el token de autorización
     const headers = new HttpHeaders({
@@ -86,20 +87,20 @@ export class TestPagePage implements OnInit {
     // Petición HTTP GET para obtener las pistas más populares del artista
     this.http.get(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`, { headers })
       .subscribe((data: any) => {
-         // Asignación de las pistas obtenidas al array de tracks
+        // Asignación de las pistas obtenidas al array de tracks
         this.tracks = data.tracks;
       });
   }
-   formatMillisecondsToMinutes(milliseconds: number): string {
+  formatMillisecondsToMinutes(milliseconds: number): string {
     // Convertir milisegundos a minutos totales
     const totalMinutes = Math.floor(milliseconds / 60000);
     // Convertir milisegundos restantes a segundos
     const remainingSeconds = Math.floor((milliseconds % 60000) / 1000);
-  
+
     // Formatear minutos y segundos para asegurar que siempre tengan dos dígitos
     const formattedMinutes = totalMinutes.toString().padStart(2, '0');
     const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
-  
+
     // Devolver el tiempo en formato 00:00
     return `${formattedMinutes}:${formattedSeconds}`;
   }
@@ -119,18 +120,18 @@ export class TestPagePage implements OnInit {
       en firebase
     */
 
-      const playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
+    const playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
 
-      if(!playlistId){
-        // Significa que la playlistId aún no existe, por lo tanto tenemos que crearla de 0 y asignarla
-        // Creamos la nueva playlist y obtenemos el id
-        const newPlaylistId = await this.fireStoreService.createPlaylistWithSong(songId);
-        // A continuación, actualizaremos el usuario para ponerle esta playlistId
-        await this.fireStoreService.updateUserPlaylistId(this.authService.getAuthState().uid, newPlaylistId);
-      } else {
-        // Significa que ya existe, por lo tanto solo tenemos que "pushear" una nueva canción
-        await this.fireStoreService.addSongToPlaylist(playlistId, songId);
-      }
+    if (!playlistId) {
+      // Significa que la playlistId aún no existe, por lo tanto tenemos que crearla de 0 y asignarla
+      // Creamos la nueva playlist y obtenemos el id
+      const newPlaylistId = await this.fireStoreService.createPlaylistWithSong(songId);
+      // A continuación, actualizaremos el usuario para ponerle esta playlistId
+      await this.fireStoreService.updateUserPlaylistId(this.authService.getAuthState().uid, newPlaylistId);
+    } else {
+      // Significa que ya existe, por lo tanto solo tenemos que "pushear" una nueva canción
+      await this.fireStoreService.addSongToPlaylist(playlistId, songId);
+    }
 
     // Mostrar un mensaje de confirmación.
     const toast = await this.toastController.create({
@@ -141,15 +142,23 @@ export class TestPagePage implements OnInit {
     toast.present();
   }
 
-  goToTvMode(track: any){
-    
+  goToTvMode(track: any) {
     console.log(track.id);
     const trackId = track.id;
 
     const artistSelected = this.artistName;
-    this.router.navigate(['/tvmode/' + artistSelected +'/'+ trackId]);
-
-
+    this.router.navigate(['/tvmode/' + artistSelected + '/' + trackId]);
   }
-  
+
+  playTrack(previewUrl: string): void {
+    this.audio = new Audio(previewUrl);
+    this.audio.play();
+  }
+
+  stopTrack(): void {
+    this.audio?.pause();
+    this.audio = null;
+  }
+
+
 }
