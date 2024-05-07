@@ -38,9 +38,12 @@
       </ion-avatar>
       <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
-      <ion-button slot=""  (click)="playTrack(track.preview_url)"></ion-button>
-      <ion-icon svg="assets/play-circle-outline.svg"></ion-icon>
-
+      <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
+        <ion-icon name="play-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="audio" (click)="stopTrack()">
+        <ion-icon name="stop-outline"></ion-icon>
+      </ion-button>
     </ion-item>
   </ion-list>
   <!-- For modern browsers -->

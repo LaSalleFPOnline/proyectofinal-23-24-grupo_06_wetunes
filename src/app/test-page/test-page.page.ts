@@ -6,7 +6,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
 import { SpotifyService } from '../services/spotify.service';
-
+import {addIcons} from 'ionicons';
+import {playOutline} from 'ionicons/icons';
+import {stopOutline} from 'ionicons/icons';
 
 @Component({
   selector: 'app-test-page',
@@ -19,8 +21,11 @@ export class TestPagePage implements OnInit {
   artistName: string = ''; // Variable vinculada al formulario
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
+  audio: HTMLMediaElement | null = null;
 
-  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, private spotifyService: SpotifyService) { }
+  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, private spotifyService: SpotifyService) { 
+    addIcons({ playOutline, stopOutline});
+  }
 
   ngOnInit() {}
 
@@ -139,8 +144,16 @@ export class TestPagePage implements OnInit {
       console.log(track);
     });
   }
+
   playTrack(previewUrl: string): void {
-    const audio = new Audio(previewUrl);
-    audio.play().catch(error => console.error("Playback error:", error));
+    this.audio = new Audio(previewUrl);
+    this.audio.play();
   }
+
+  stopTrack(): void {
+    this.audio?.pause();
+    this.audio = null;
+  }
+
+
 }
