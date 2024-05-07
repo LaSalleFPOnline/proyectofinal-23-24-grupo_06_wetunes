@@ -1,0 +1,55 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="m1"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Search Page</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <form (ngSubmit)="getArtistDetails(artistName)">
+          <ion-item>
+            <ion-label position="floating" color="tertiary">Artist</ion-label>
+            <ion-input [(ngModel)]="artistName" name="artistName" type="text" color="tertiary"></ion-input>
+          </ion-item>
+          <ion-button type="submit" expand="block" color="primary">Find Artist</ion-button>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card *ngIf="artist">
+    <ion-card-header color="dark">
+      <ion-card-title color="tertiary">
+        <h2>{{ artist }}</h2>
+      </ion-card-title>
+    </ion-card-header>
+  </ion-card>
+
+  <!-- Sección para mostrar las canciones -->
+  <ion-list *ngIf="tracks.length > 0">
+    <ion-list-header>
+      <h3>Top Tracks</h3>
+    </ion-list-header>
+    <ion-item *ngFor="let track of tracks">
+      <ion-avatar slot="start">
+        <!-- Añadir la imagen del álbum usando track.album.images[2].url -->
+        <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
+          [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
+      </ion-avatar>
+      <ion-label color="tertiary" (click)="goToTvMode(track)">{{ track.name }} -
+        {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
+      <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
+      <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
+        <ion-icon name="play-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
+        <ion-icon name="stop-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

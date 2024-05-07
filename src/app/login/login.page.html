@@ -1,0 +1,33 @@
+<ion-header [translucent]="true" class="ion-header">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <!-- <ion-menu-button menu="m1"></ion-menu-button> -->
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding ion-text-center">
+  <div class="login-container">
+    <!-- <img src="../../assets/icon/LogoWetunes.jpg" alt="LogoWetunes" class="logo"> -->
+    <h1>Iniciar Sesión</h1>
+    <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" formControlName="email" color="tertiary"></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"></ion-input>
+        <span class="material-symbols-outlined icon-toggle" slot="end" (click)="togglePassword()">
+          {{ showPassword ? 'visibility_off' : 'visibility' }}
+        </span>
+      </ion-item>
+      <div class="forgot-password">
+        <ion-button fill="clear" class="ion-no-padding">¿Olvidaste tu contraseña?</ion-button>
+      </div>
+      <ion-button type="submit" expand="block" class="login-button" [routerLink]="['/search-page']">Inicia</ion-button>
+      <p class="register-link">¿Nuevo en WeTunes? <a href="/register">Regístrate</a></p>
+    </form>
+  </div>
+</ion-content>

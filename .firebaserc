@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "wetunes-54fc9"
+  },
+  "targets": {
+    "wetunes-54fc9": {
+      "hosting": {
+        "app": [
+          "wetunes-54fc9"
+        ]
+      }
+    }
+  }
+}

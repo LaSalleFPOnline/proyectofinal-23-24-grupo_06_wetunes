@@ -4,7 +4,7 @@
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
-  --ion-color-primary: #3880ff;
+  --ion-color-primary: #fa8733; //Color de los botones
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
@@ -12,7 +12,7 @@
   --ion-color-primary-tint: #4c8dff;
 
   /** secondary **/
-  --ion-color-secondary: #3dc2ff;
+  --ion-color-secondary: #2B8CD5;
   --ion-color-secondary-rgb: 61, 194, 255;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
@@ -20,7 +20,7 @@
   --ion-color-secondary-tint: #50c8ff;
 
   /** tertiary **/
-  --ion-color-tertiary: #5260ff;
+  --ion-color-tertiary: #F8F8F8;
   --ion-color-tertiary-rgb: 82, 96, 255;
   --ion-color-tertiary-contrast: #ffffff;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
@@ -28,7 +28,7 @@
   --ion-color-tertiary-tint: #6370ff;
 
   /** success **/
-  --ion-color-success: #2dd36f;
+  --ion-color-success: #ffffff; //Color del select
   --ion-color-success-rgb: 45, 211, 111;
   --ion-color-success-contrast: #ffffff;
   --ion-color-success-contrast-rgb: 255, 255, 255;
@@ -36,7 +36,7 @@
   --ion-color-success-tint: #42d77d;
 
   /** warning **/
-  --ion-color-warning: #ffc409;
+  --ion-color-warning: #ffc6093f; //El mismo color que el primary
   --ion-color-warning-rgb: 255, 196, 9;
   --ion-color-warning-contrast: #000000;
   --ion-color-warning-contrast-rgb: 0, 0, 0;
@@ -44,7 +44,7 @@
   --ion-color-warning-tint: #ffca22;
 
   /** danger **/
-  --ion-color-danger: #eb445a;
+  --ion-color-danger: #fa8733;
   --ion-color-danger-rgb: 235, 68, 90;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
@@ -52,7 +52,7 @@
   --ion-color-danger-tint: #ed576b;
 
   /** dark **/
-  --ion-color-dark: #222428;
+  --ion-color-dark: #00141B; //Color de la parte inferior de la imagen del logo
   --ion-color-dark-rgb: 34, 36, 40;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;
@@ -74,7 +74,52 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
-}
+  /* Wetunes - https://coolors.co/0b5eaf-1f333a-00161e-162d37-cacbbd */
+
+/* CSS HEX */
+--green-blue: #0b5eafff;
+--gunmetal: #1f333aff;
+--rich-black: #00161eff;
+--gunmetal-2: #162d37ff;
+--bone: #cacbbdff;
+--gradient-top: linear-gradient(0deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-right: linear-gradient(90deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-bottom: linear-gradient(180deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-left: linear-gradient(270deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-top-right: linear-gradient(45deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-bottom-right: linear-gradient(135deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-top-left: linear-gradient(225deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-bottom-left: linear-gradient(315deg, #0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+--gradient-radial: radial-gradient(#0b5eafff, #1f333aff, #00161eff, #162d37ff, #cacbbdff);
+
+/* CSS HSL */
+--green-blue: hsla(210, 88%, 36%, 1);
+--gunmetal: hsla(196, 30%, 17%, 1);
+--rich-black: hsla(196, 100%, 6%, 1);
+--gunmetal-2: hsla(198, 43%, 15%, 1);
+--bone: hsla(64, 12%, 77%, 1);
+
+/* SCSS HEX */
+$green-blue: #0b5eafff;
+$gunmetal: #1f333aff;
+$rich-black: #00161eff;
+$gunmetal-2: #162d37ff;
+$bone: #cacbbdff;
+
+/* SCSS HSL */
+$green-blue: hsla(210, 88%, 36%, 1);
+$gunmetal: hsla(196, 30%, 17%, 1);
+$rich-black: hsla(196, 100%, 6%, 1);
+$gunmetal-2: hsla(198, 43%, 15%, 1);
+$bone: hsla(64, 12%, 77%, 1);
+
+/* SCSS RGB */
+$green-blue: rgba(11, 94, 175, 1);
+$gunmetal: rgba(31, 51, 58, 1);
+$rich-black: rgba(0, 22, 30, 1);
+$gunmetal-2: rgba(22, 45, 55, 1);
+$bone: rgba(202, 203, 189, 1);
+
 
 @media (prefers-color-scheme: dark) {
   /*
@@ -236,9 +281,12 @@
 }
 
 html {
-  /* 
+  /*
    * For more information on dynamic font scaling, visit the documentation:
    * https://ionicframework.com/docs/layout/dynamic-font-scaling
    */
   --ion-dynamic-font: var(--ion-default-dynamic-font);
+}
+
+
 }
