@@ -20,7 +20,7 @@
         <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
           [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
       </ion-avatar>
-      <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}})
+      <ion-label>{{ track.artists[0].name }} - {{ track.name }} - {{ formatMillisecondsToMinutes(track.duration_ms) }} ({{ track.album.name }})
       </ion-label>
       <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
       <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
