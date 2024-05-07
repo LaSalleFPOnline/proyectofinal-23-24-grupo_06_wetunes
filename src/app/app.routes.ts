@@ -9,6 +9,10 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home.page').then( m => m.HomePage)
   },
   {
+    path: 'playlist',
+    loadComponent: () => import('./playlist/playlist.page').then( m => m.PlaylistPage)
+  },
+  {
     path: 'session',
     loadComponent: () => import('./session/session.page').then( m => m.SessionPage)
   },
