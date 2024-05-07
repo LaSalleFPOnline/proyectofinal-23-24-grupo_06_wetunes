@@ -1,23 +1,13 @@
-ion-header {
-  ion-toolbar {
-    --ion-background-color: var(--gunmetal-2);
-  }
-  ion-title{
-    color: #fffffa;
-  }
+ion-item{ //Color del texto email y pass
+  color: rgba(255, 255, 255, 0.311);
 }
 
-ion-content {
-  --ion-background-color: var(--bone);
-
-}
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
-
 
   .logo {
     max-width: 150px;
@@ -32,14 +22,6 @@ ion-content {
   ion-item {
     margin-bottom: 20px;
     width: 380px;
-
-    ion-label {
-      color: black;
-    }
-
-    ion-input {
-      color: black;
-    }
   }
 
   .forgot-password {
@@ -51,14 +33,13 @@ ion-content {
 
   .login-button {
     margin-top: 20px;
-    // width: 200px;
   }
 
   .register-link {
     margin-top: 20px;
-    color: black;
   }
 }
+
 .icon-toggle {
   font-size: 17px;
   margin-top: 22px;

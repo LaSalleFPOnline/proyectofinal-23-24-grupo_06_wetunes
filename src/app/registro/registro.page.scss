@@ -1,69 +1,50 @@
-ion-header {
-    ion-toolbar {
-      --ion-background-color: var(--gunmetal-2);
-    }
-    ion-title{
-      color: #fffffa;
-    }
+ion-item{
+  color: rgba(255, 255, 255, 0.311);
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  .logo {
+    max-width: 150px;
+    margin-bottom: 30px;
   }
-  
-  ion-content {
-    --ion-background-color: var(--bone);
-  
+
+  h1 {
+    margin-bottom: 25px;
+    font-size: 30px;
   }
-  .login-container {
+
+  ion-item {
+    margin-bottom: 20px;
+    width: 380px;
+
+  }
+
+  .forgot-password {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 100%;
-  
-  
-    .logo {
-      max-width: 150px;
-      margin-bottom: 30px;
-    }
-  
-    h1 {
-      margin-bottom: 25px;
-      font-size: 30px;
-    }
-  
-    ion-item {
-      margin-bottom: 20px;
-      width: 380px;
-  
-      ion-label {
-        color: black;
-      }
-  
-      ion-input {
-        color: black;
-      }
-    }
-  
-    .forgot-password {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-  
-    .register-button {
-      margin-top: 20px;
-      // width: 200px;
-    }
-  
-    .register-link {
-      margin-top: 20px;
-      color: black;
-    }
+    margin-bottom: 20px;
   }
-  .icon-toggle {
-    font-size: 17px;
-    margin-top: 22px;
+
+  .login-button {
+    margin-top: 20px;
   }
-  
-  
+
+  .register-link {
+    margin-top: 20px;
+  }
+}
+
+.icon-toggle {
+  font-size: 17px;
+  margin-top: 22px;
+}
+
   
   

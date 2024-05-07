@@ -45,7 +45,7 @@ export class RegistroPage implements OnInit {
       this.authService.register(rawForm.email, rawForm.nombre, rawForm.password)
         .subscribe({
           next: async () => {
-            this.router.navigateByUrl('/home');
+            this.router.navigateByUrl('/search-page');
             const user = this.authService.getAuthState()
             await this.firestoreService.addUser(usuario, user.uid);
           },
@@ -59,7 +59,6 @@ export class RegistroPage implements OnInit {
   }
 
   ngOnInit() {
-    const showPassword = false;
   }
   showPassword = false;
 

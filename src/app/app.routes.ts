@@ -4,9 +4,12 @@ export const routes: Routes = [
   { 
     path: '', loadComponent: ()=> import('./login/login.page').then(m => m.LoginPage) 
   },
+  { 
+    path: 'login', loadComponent: ()=> import('./login/login.page').then(m => m.LoginPage) 
+  },
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then( m => m.HomePage)
+    path: 'search-page',
+    loadComponent: () => import('./search-page/search-page.page').then( m => m.TestPagePage)
   },
   {
     path: 'playlist',
@@ -18,5 +21,9 @@ export const routes: Routes = [
   },
   {
     path: 'register', loadComponent: () => import('./registro/registro.page').then(m => m.RegistroPage)
+  },
+  {
+    path: 'tvmode/:artistSelected/:trackId',
+    loadComponent: () => import('./tvmode/tvmode.page').then( m => m.TvmodePage)
   }
 ];
