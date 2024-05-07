@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="m1"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form (ngSubmit)="getArtistDetails(artistName)">
+    <ion-item>
+      <ion-label position="floating">Artist</ion-label>
+      <ion-input [(ngModel)]="artistName" name="artistName" type="text"></ion-input>
+    </ion-item>
+    <ion-button type="submit" expand="block">Find Artist</ion-button>
+  </form>
+
+  <ion-card *ngIf="artist">
+    <ion-card-header>
+      <ion-card-title>
+        <h2>{{ artist }}</h2>
+      </ion-card-title>
+    </ion-card-header>
+  </ion-card>
+
+  <!-- Sección para mostrar las canciones -->
+  <ion-list *ngIf="tracks.length > 0">
+    <ion-list-header>
+      <ion-label>Top Tracks</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let track of tracks">
+      <ion-avatar slot="start">
+        <!-- Añadir la imagen del álbum usando track.album.images[2].url -->
+        <img *ngIf="track.album && track.album.images && track.album.images.length > 2" 
+             [src]="track.album.images[2].url" 
+             [alt]="track.name + ' album cover'">
+      </ion-avatar>
+      <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
+      <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
+      <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
+        <ion-icon name="play-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
+        <ion-icon name="stop-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  <!-- For modern browsers -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+</ion-content>

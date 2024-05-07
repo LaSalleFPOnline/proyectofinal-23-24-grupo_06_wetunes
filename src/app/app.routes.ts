@@ -7,10 +7,13 @@ export const routes: Routes = [
   { 
     path: 'login', loadComponent: ()=> import('./login/login.page').then(m => m.LoginPage) 
   },
-
   {
     path: 'search-page',
     loadComponent: () => import('./search-page/search-page.page').then( m => m.TestPagePage)
+  },
+  {
+    path: 'playlist',
+    loadComponent: () => import('./playlist/playlist.page').then( m => m.PlaylistPage)
   },
   {
     path: 'session',
