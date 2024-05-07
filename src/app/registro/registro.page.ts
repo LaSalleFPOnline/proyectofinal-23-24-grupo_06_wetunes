@@ -39,7 +39,8 @@ export class RegistroPage implements OnInit {
         nombre: rawForm.nombre,
         email: rawForm.email,
         password: rawForm.password,
-        playlistId: ''
+        playlistId: '',
+        sessionId: ''
       };
       this.authService.register(rawForm.email, rawForm.nombre, rawForm.password)
         .subscribe({

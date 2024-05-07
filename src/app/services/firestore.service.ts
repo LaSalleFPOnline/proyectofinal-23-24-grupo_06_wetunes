@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Firestore, collection, addDoc, doc, setDoc, getDoc, updateDoc } from "@angular/fire/firestore";
+import { Firestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, query, where, getDocs } from "@angular/fire/firestore";
 import { UserInterface } from "../interfaces/user.interface";
 import { PlaylistInterface } from "../interfaces/playlist.interface";
+import { SessionInterface } from "../interfaces/session.interface";
 @Injectable({
   providedIn: 'root'
 })
@@ -15,9 +16,49 @@ export class FirestoreService {
     return setDoc(userRef, user);
   }
 
+  async retrieveUser(userId: string): Promise<UserInterface> {
+    const userDocRef = doc(this.firestore, 'usuarios', userId);
+    const docSnapshot = await getDoc(userDocRef);
+
+    if (docSnapshot.exists()) {
+      const userData = docSnapshot.data() as UserInterface;
+      return userData
+    } else {
+      throw new Error('User doesnt exist')
+    }
+  }
+
+  async retrieveSession(sessionId: string): Promise<SessionInterface> {
+    const sessionDocRef = doc(this.firestore, 'sesiones', sessionId);
+    const docSnapshot = await getDoc(sessionDocRef);
+
+    if (docSnapshot.exists()) {
+      const sessionData = docSnapshot.data() as SessionInterface;
+      return sessionData
+    } else {
+      throw new Error('Session doesnt exist')
+    }
+  }
+
   addUserWithoutId(user: UserInterface) {
     const userRef = collection(this.firestore, 'usuarios');
     return addDoc(userRef, user);
+  }
+
+  addSession(session: SessionInterface, sessionId: string) {
+    const sessionRef = doc(this.firestore, 'sesiones', sessionId);
+    return setDoc(sessionRef, session);
+  }
+
+  async checkSession(sessionId: string): Promise<boolean> {
+    const sessionDocRef = doc(this.firestore, 'sesiones', sessionId); // Reference to the user document
+    const docSnapshot = await getDoc(sessionDocRef); // Fetch the document
+
+    if (docSnapshot.exists()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async updateUserPlaylistId(userId: string, playlistId: string): Promise<void> {
@@ -31,6 +72,20 @@ export class FirestoreService {
     } catch (error) {
       console.error("Error updating user: ", error);
       throw new Error("Failed to update user playlistId"); // Optionally throw an error
+    }
+  }
+
+  async updateUserSessionId(userId: string, sessionId: string): Promise<void> {
+    const userDocRef = doc(this.firestore, 'usuarios', userId); // Reference to the user document
+
+    try {
+      await updateDoc(userDocRef, {
+        sessionId: sessionId // Update the sessionId field
+      });
+      console.log("User sessionId updated successfully");
+    } catch (error) {
+      console.error("Error updating user: ", error);
+      throw new Error("Failed to update user sessionId"); // Optionally throw an error
     }
   }
 
@@ -84,6 +139,27 @@ export class FirestoreService {
     } else {
       // If the playlist does not exist, throw an error or handle as needed
       throw new Error('Playlist not found');
+    }
+  }
+
+  async clearSessionId(currentSessionId: string): Promise<void> {
+    try {
+      // Query the documents with the specific sessionId
+      const snapshot = await getDocs(query(collection(this.firestore, "usuarios"), where("sessionId", "==", currentSessionId)));
+
+      if (snapshot.empty) {
+        console.log('No matching documents.');
+        return;
+      }
+
+      snapshot.forEach(async doc => {
+        let key : string = doc.id
+        await this.updateUserSessionId(key, "")
+      });
+
+      console.log('Session IDs cleared successfully.');
+    } catch (error) {
+      console.error('Error updating documents: ', error);
     }
   }
 }
