@@ -40,6 +40,18 @@ export class FirestoreService {
     }
   }
 
+  async retrievePlaylist(playlistId: string): Promise<PlaylistInterface> {
+    const playlistDocRef = doc(this.firestore, 'playlists', playlistId);
+    const docSnapshot = await getDoc(playlistDocRef);
+
+    if (docSnapshot.exists()) {
+      const playlistData = docSnapshot.data() as PlaylistInterface;
+      return playlistData
+    } else {
+      throw new Error('Playlist doesnt exist')
+    }
+  }
+
   addUserWithoutId(user: UserInterface) {
     const userRef = collection(this.firestore, 'usuarios');
     return addDoc(userRef, user);
@@ -130,6 +142,26 @@ export class FirestoreService {
       const playlistData = docSnapshot.data() as PlaylistInterface;
       if (!playlistData.songIds.includes(songId)) {
         playlistData.songIds.push(songId); // Add songId to the list of song IDs in the playlist
+
+        // Update the playlist object in Firebase
+        await updateDoc(playlistDocRef, {
+          songIds: playlistData.songIds
+        });
+      }
+    } else {
+      // If the playlist does not exist, throw an error or handle as needed
+      throw new Error('Playlist not found');
+    }
+  }
+
+  async removeSongFromPlaylist(playlistId: string, songId: string): Promise<void> {
+    const playlistDocRef = doc(this.firestore, 'playlists', playlistId); // Reference to the playlist document
+    const docSnapshot = await getDoc(playlistDocRef); // Fetch the document
+
+    if (docSnapshot.exists()) {
+      const playlistData = docSnapshot.data() as PlaylistInterface;
+      if (playlistData.songIds.includes(songId)) {
+        playlistData.songIds = playlistData.songIds.filter(s => s != songId); // Add songId to the list of song IDs in the playlist
 
         // Update the playlist object in Firebase
         await updateDoc(playlistDocRef, {

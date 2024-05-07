@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="m1"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Playlist</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <h1>Playlist</h1>
+  <h2 *ngIf="!playlistId">Oops! Parece que no tienes una playlist actualmente, ve a ajustes y creala!</h2>
+  <ion-list *ngIf="tracks.length > 0">
+    <ion-list-header>
+      <ion-label>Canciones añadidas</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let track of tracks">
+      <ion-avatar slot="start">
+        <!-- Añadir la imagen del álbum usando track.album.images[2].url -->
+        <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
+          [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
+      </ion-avatar>
+      <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}})
+      </ion-label>
+     <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
+      <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
+        <ion-icon name="play-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
+        <ion-icon name="stop-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
