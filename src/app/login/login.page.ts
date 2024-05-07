@@ -44,7 +44,7 @@ export class LoginPage implements OnInit {
     .login(rawForm.email, rawForm.password)
     .subscribe({
       next: () => {
-        this.router.navigateByUrl('/test-page');
+        this.router.navigateByUrl('/home');
       },
       error: (err) => {
         this.errorMessage = err.code;

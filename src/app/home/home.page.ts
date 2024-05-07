@@ -11,13 +11,13 @@ import {playOutline} from 'ionicons/icons';
 import {stopOutline} from 'ionicons/icons';
 
 @Component({
-  selector: 'app-test-page',
-  templateUrl: './test-page.page.html',
-  styleUrls: ['./test-page.page.scss'],
+  selector: 'app-home',
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class TestPagePage implements OnInit {
+export class HomePage implements OnInit {
   artistName: string = ''; // Variable vinculada al formulario
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones

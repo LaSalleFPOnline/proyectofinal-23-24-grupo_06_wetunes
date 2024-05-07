@@ -45,7 +45,7 @@ export class RegistroPage implements OnInit {
       this.authService.register(rawForm.email, rawForm.nombre, rawForm.password)
         .subscribe({
           next: async () => {
-            this.router.navigateByUrl('/test-page');
+            this.router.navigateByUrl('/home');
             const user = this.authService.getAuthState()
             await this.firestoreService.addUser(usuario, user.uid);
           },

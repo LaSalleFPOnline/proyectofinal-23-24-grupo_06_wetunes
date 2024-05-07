@@ -5,8 +5,8 @@ export const routes: Routes = [
     path: '', loadComponent: ()=> import('./login/login.page').then(m => m.LoginPage) 
   },
   {
-    path: 'test-page',
-    loadComponent: () => import('./test-page/test-page.page').then( m => m.TestPagePage)
+    path: 'home',
+    loadComponent: () => import('./home/home.page').then( m => m.HomePage)
   },
   {
     path: 'session',
