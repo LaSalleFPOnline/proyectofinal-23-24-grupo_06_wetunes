@@ -101,33 +101,40 @@ export class PlaylistPage implements OnInit, AfterViewInit {
     this.tracks = this.tracks.filter(s => s.id != songId)
   }
 
-  playTrack(previewUrl: string): void {
-    if (this.audioPlayer && this.audioPlayer.nativeElement) {
-      try {
-          if (this.audioPlayer.nativeElement.src !== previewUrl) {
-              this.audioPlayer.nativeElement.src = previewUrl;
-              this.audioPlayer.nativeElement.load();
-          }
-          this.audioPlayer.nativeElement.play().catch(e => {
-              console.error("Error al reproducir la pista:", e);
-              this.toastController.create({
-                  message: 'Error al reproducir la pista. Por favor, intente de nuevo.',
-                  duration: 2000
-              }).then(toast => toast.present());
-          });
-      } catch (e) {
-          console.error("Error en la reproducción:", e);
+  playTrack(index: number): void {
+    if (index < this.tracks.length && this.audioPlayer && this.audioPlayer.nativeElement) {
+      const track = this.tracks[index];
+      if (this.audioPlayer.nativeElement.src !== track.preview_url) {
+        this.audioPlayer.nativeElement.src = track.preview_url;
+        this.audioPlayer.nativeElement.load();
       }
-  } else {
-      console.error("El elemento audioPlayer aún no está disponible.");
+      this.audioPlayer.nativeElement.play().then(() => {
+        console.log("Reproducción iniciada!");
+      }).catch(e => {
+        console.error("Error al reproducir la pista:", e);
+        this.toastController.create({
+          message: 'Error al reproducir la pista. Por favor, intente de nuevo.',
+          duration: 2000
+        }).then(toast => toast.present());
+      });
+  
+      // Configura la reproducción automática de la siguiente pista cuando esta termine
+      this.audioPlayer.nativeElement.onended = () => {
+        this.playNextTrack(index + 1);
+      };
+    } else {
+      console.error("Índice de pista fuera de rango o audioPlayer no disponible.");
+    }
   }
 
-
-    // this.currentTrackUrl = previewUrl;
-    // setTimeout(() => this.audioPlayer.nativeElement.play(), 0);
-    //////////////////////////
-    // this.audio = new Audio(previewUrl);
-    // this.audio.play();
+  playNextTrack(nextIndex: number): void {
+    if (nextIndex < this.tracks.length) {
+      this.playTrack(nextIndex);
+    } else {
+      console.log("Fin de la lista de reproducción");
+      // Opcional: Repetir la lista desde el principio
+      // this.playTrack(0); // Descomenta esta línea si deseas que la reproducción se repita automáticamente
+    }
   }
 
   stopTrack(): void {
