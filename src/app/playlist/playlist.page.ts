@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -17,11 +17,14 @@ import { stopOutline } from 'ionicons/icons';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class PlaylistPage implements OnInit {
+export class PlaylistPage implements OnInit, AfterViewInit {
 
   playlistId: string | null = null
   tracks: any[] = [];
   audio: HTMLMediaElement | null = null;
+
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  currentTrackUrl: string | null = null;
 
 
   constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, private spotifyService: SpotifyService) {
@@ -32,6 +35,10 @@ export class PlaylistPage implements OnInit {
   ngOnInit() {
     this.loadPlaylist();
   }
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit: Audio player is initialized');
+  }
+
 
   async loadPlaylist(): Promise<void> {
     this.playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
@@ -95,13 +102,42 @@ export class PlaylistPage implements OnInit {
   }
 
   playTrack(previewUrl: string): void {
-    this.audio = new Audio(previewUrl);
-    this.audio.play();
+    if (this.audioPlayer && this.audioPlayer.nativeElement) {
+      try {
+          if (this.audioPlayer.nativeElement.src !== previewUrl) {
+              this.audioPlayer.nativeElement.src = previewUrl;
+              this.audioPlayer.nativeElement.load();
+          }
+          this.audioPlayer.nativeElement.play().catch(e => {
+              console.error("Error al reproducir la pista:", e);
+              this.toastController.create({
+                  message: 'Error al reproducir la pista. Por favor, intente de nuevo.',
+                  duration: 2000
+              }).then(toast => toast.present());
+          });
+      } catch (e) {
+          console.error("Error en la reproducción:", e);
+      }
+  } else {
+      console.error("El elemento audioPlayer aún no está disponible.");
+  }
+
+
+    // this.currentTrackUrl = previewUrl;
+    // setTimeout(() => this.audioPlayer.nativeElement.play(), 0);
+    //////////////////////////
+    // this.audio = new Audio(previewUrl);
+    // this.audio.play();
   }
 
   stopTrack(): void {
-    this.audio?.pause();
-    this.audio = null;
+    if (this.audioPlayer) {
+      this.audioPlayer.nativeElement.pause();
+      this.audioPlayer.nativeElement.currentTime = 0;
+      this.currentTrackUrl = null;  // Reset URL to remove the audio element
+    }
+    // this.audio?.pause();
+    // this.audio = null;
   }
 
 
