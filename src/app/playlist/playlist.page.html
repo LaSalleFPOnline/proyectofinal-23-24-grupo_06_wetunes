@@ -31,4 +31,8 @@
       </ion-button>
     </ion-item>
   </ion-list>
+  <audio #audioPlayer controls class="audio-player-fixed">
+    <source [src]="currentTrackUrl" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 </ion-content>
