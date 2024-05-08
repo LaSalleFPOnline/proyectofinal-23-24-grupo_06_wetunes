@@ -1,29 +1,19 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button menu="m1"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Playlist</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content padding>
   <h1>Playlist</h1>
-  <h2 *ngIf="!playlistId">Oops! Parece que no tienes una playlist actualmente, ve a ajustes y creala!</h2>
+  <h2 *ngIf="!playlistId">Oops! Parece que no tienes una playlist actualmente, ve a ajustes y créala!</h2>
   <ion-list *ngIf="tracks.length > 0">
     <ion-list-header>
       <ion-label>Canciones añadidas</ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let track of tracks">
+    <ion-item *ngFor="let track of tracks; let i = index">
       <ion-avatar slot="start">
-        <!-- Añadir la imagen del álbum usando track.album.images[2].url -->
         <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
           [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
       </ion-avatar>
       <ion-label>{{ track.artists[0].name }} - {{ track.name }} - {{ formatMillisecondsToMinutes(track.duration_ms) }} ({{ track.album.name }})
       </ion-label>
       <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
-      <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
+      <ion-button *ngIf="track.preview_url" (click)="playTrack(i)">
         <ion-icon name="play-outline"></ion-icon>
       </ion-button>
       <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
@@ -31,4 +21,8 @@
       </ion-button>
     </ion-item>
   </ion-list>
+  <audio #audioPlayer controls class="audio-player-fixed">
+    <source [src]="currentTrackUrl" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 </ion-content>

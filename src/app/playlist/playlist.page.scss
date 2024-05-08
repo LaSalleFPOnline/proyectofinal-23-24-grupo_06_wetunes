@@ -1,0 +1,11 @@
+.audio-player-fixed{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+ion-list {
+    padding-bottom: 50px; /* Ajusta este valor según el tamaño del reproductor */
+  }

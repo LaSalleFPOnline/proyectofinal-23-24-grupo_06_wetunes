@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -17,11 +17,14 @@ import { stopOutline } from 'ionicons/icons';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class PlaylistPage implements OnInit {
+export class PlaylistPage implements OnInit, AfterViewInit {
 
   playlistId: string | null = null
   tracks: any[] = [];
   audio: HTMLMediaElement | null = null;
+
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  currentTrackUrl: string | null = null;
 
 
   constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, private spotifyService: SpotifyService) {
@@ -32,6 +35,10 @@ export class PlaylistPage implements OnInit {
   ngOnInit() {
     this.loadPlaylist();
   }
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit: Audio player is initialized');
+  }
+
 
   async loadPlaylist(): Promise<void> {
     this.playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
@@ -94,14 +101,50 @@ export class PlaylistPage implements OnInit {
     this.tracks = this.tracks.filter(s => s.id != songId)
   }
 
-  playTrack(previewUrl: string): void {
-    this.audio = new Audio(previewUrl);
-    this.audio.play();
+  playTrack(index: number): void {
+    if (index < this.tracks.length && this.audioPlayer && this.audioPlayer.nativeElement) {
+      const track = this.tracks[index];
+      if (this.audioPlayer.nativeElement.src !== track.preview_url) {
+        this.audioPlayer.nativeElement.src = track.preview_url;
+        this.audioPlayer.nativeElement.load();
+      }
+      this.audioPlayer.nativeElement.play().then(() => {
+        console.log("Reproducción iniciada!");
+      }).catch(e => {
+        console.error("Error al reproducir la pista:", e);
+        this.toastController.create({
+          message: 'Error al reproducir la pista. Por favor, intente de nuevo.',
+          duration: 2000
+        }).then(toast => toast.present());
+      });
+  
+      // Configura la reproducción automática de la siguiente pista cuando esta termine
+      this.audioPlayer.nativeElement.onended = () => {
+        this.playNextTrack(index + 1);
+      };
+    } else {
+      console.error("Índice de pista fuera de rango o audioPlayer no disponible.");
+    }
+  }
+
+  playNextTrack(nextIndex: number): void {
+    if (nextIndex < this.tracks.length) {
+      this.playTrack(nextIndex);
+    } else {
+      console.log("Fin de la lista de reproducción");
+      // Opcional: Repetir la lista desde el principio
+      // this.playTrack(0); // Descomenta esta línea si deseas que la reproducción se repita automáticamente
+    }
   }
 
   stopTrack(): void {
-    this.audio?.pause();
-    this.audio = null;
+    if (this.audioPlayer) {
+      this.audioPlayer.nativeElement.pause();
+      this.audioPlayer.nativeElement.currentTime = 0;
+      this.currentTrackUrl = null;  // Reset URL to remove the audio element
+    }
+    // this.audio?.pause();
+    // this.audio = null;
   }
 
 

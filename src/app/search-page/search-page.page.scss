@@ -1,29 +1,45 @@
-ion-content{
-    
-    form{
+ion-content {
+
+    form {
         margin: 3% 10% 3% 10%;
-        ion-item{
+
+        ion-item {
             margin: 0% 1% 2% 1%;
         }
-        ion-button{
+
+        ion-button {
             border-radius: 5px;
             margin: 0% 1% 0% 1%;
         }
     }
-    ion-list, ion-card{
+
+    ion-list,
+    ion-card {
         margin: 2% 11% 1% 11%;
-       
-        ion-card-title{
+
+        ion-card-title {
             display: flex;
             flex-direction: column;
             //align-items: center;
             justify-content: center;
             height: 100%;
-            margin: 0% 0% 1% 2%;          
+            margin: 0% 0% 1% 2%;
         }
     }
 
-    h3{
+    h3 {
         margin-bottom: 2%;
     }
+
+    .audio-player-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    ion-list {
+        padding-bottom: 50px; /* Ajusta este valor según el tamaño del reproductor */
+      }
 }

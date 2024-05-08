@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -16,12 +16,15 @@ import { Platform } from '@ionic/angular';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class TestPagePage implements OnInit {
+export class TestPagePage implements OnInit, AfterViewInit {
   artistName: string = ''; // Variable vinculada al formulario
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
   trackId: string | undefined;
   audio: HTMLMediaElement | null = null;
+
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  currentTrackUrl: string | null = null;
 
   constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, public router: Router,
     public platform: Platform) {
@@ -29,6 +32,11 @@ export class TestPagePage implements OnInit {
   }
 
   ngOnInit() {
+    console.log("Pagina cargada y preparada para buscar canciones");
+  }
+
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit: Audio player is initialized');
   }
 
   getArtistDetails(artistName: string) {
@@ -151,13 +159,44 @@ export class TestPagePage implements OnInit {
   }
 
   playTrack(previewUrl: string): void {
-    this.audio = new Audio(previewUrl);
-    this.audio.play();
+
+    if (this.audioPlayer && this.audioPlayer.nativeElement) {
+      try {
+          if (this.audioPlayer.nativeElement.src !== previewUrl) {
+              this.audioPlayer.nativeElement.src = previewUrl;
+              this.audioPlayer.nativeElement.load();
+          }
+          this.audioPlayer.nativeElement.play().catch(e => {
+              console.error("Error al reproducir la pista:", e);
+              this.toastController.create({
+                  message: 'Error al reproducir la pista. Por favor, intente de nuevo.',
+                  duration: 2000
+              }).then(toast => toast.present());
+          });
+      } catch (e) {
+          console.error("Error en la reproducción:", e);
+      }
+  } else {
+      console.error("El elemento audioPlayer aún no está disponible.");
+  }
+
+
+    // this.currentTrackUrl = previewUrl;
+    // setTimeout(() => this.audioPlayer.nativeElement.play(), 0);
+
+    // this.audio = new Audio(previewUrl);
+    // this.audio.play();
   }
 
   stopTrack(): void {
-    this.audio?.pause();
-    this.audio = null;
+    if (this.audioPlayer) {
+      this.audioPlayer.nativeElement.pause();
+      this.audioPlayer.nativeElement.currentTime = 0;
+      this.currentTrackUrl = null;
+    }
+
+    // this.audio?.pause();
+    // this.audio = null;
   }
 
 
