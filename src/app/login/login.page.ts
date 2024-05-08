@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -16,17 +17,18 @@ import { AuthService } from '../services/auth.service';
 export class LoginPage implements OnInit {
   showPassword = false
 
-  fb = inject(FormBuilder);
-  http = inject(HttpClient);
-  router = inject(Router);
-  authService = inject(AuthService);
-
   logForm = this.fb.nonNullable.group({
     email: ['', Validators.required],
     password: ['', Validators.required],
   });
 
-  constructor(authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private toastController: ToastController,
+  ) { }
 
   ngOnInit() {
     const showPassword = false;
@@ -37,7 +39,14 @@ export class LoginPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  errorMessage: string | null = null;
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
   onSubmit(): void {
     const rawForm = this.logForm.getRawValue();
     this.authService
@@ -47,8 +56,14 @@ export class LoginPage implements OnInit {
         this.router.navigateByUrl('/search-page');
       },
       error: (err) => {
-        this.errorMessage = err.code;
-        console.log(this.errorMessage);
+        let errorMessage = 'Ha ocurrido un error, inténtalo de nuevo.';
+      if (err.code === 'auth/invalid-credential') {
+        errorMessage = 'El correo o la contraseña son incorrectos';
+      } else if (err.code === 'auth/invalid-email') {
+        errorMessage = 'El formato del correo electrónico es incorrecto';
+      }
+        this.presentToast(errorMessage);
+        console.log(err);
       },
     });
   }
