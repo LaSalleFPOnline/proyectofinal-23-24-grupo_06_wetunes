@@ -5,7 +5,6 @@ import { IonicModule } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
-import { Firestore } from '@angular/fire/firestore';
 import { FirestoreService } from '../services/firestore.service';
 import { UserInterface } from '../interfaces/user.interface';
 @Component({
@@ -16,11 +15,12 @@ import { UserInterface } from '../interfaces/user.interface';
   imports: [IonicModule, CommonModule, FormsModule, RouterLink, ReactiveFormsModule, HttpClientModule]
 })
 export class RegistroPage implements OnInit {
+  showPassword = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private http: HttpClient,
     private firestoreService: FirestoreService
   ) { }
 
@@ -38,7 +38,6 @@ export class RegistroPage implements OnInit {
       const usuario: UserInterface = {
         nombre: rawForm.nombre,
         email: rawForm.email,
-        password: rawForm.password,
         playlistId: '',
         sessionId: ''
       };
@@ -59,8 +58,9 @@ export class RegistroPage implements OnInit {
   }
 
   ngOnInit() {
+    this.showPassword = false;
   }
-  showPassword = false;
+  
 
   togglePassword() {
     this.showPassword = !this.showPassword;
