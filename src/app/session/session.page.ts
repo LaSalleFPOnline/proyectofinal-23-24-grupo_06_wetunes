@@ -70,7 +70,7 @@ export class SessionPage implements OnInit {
 
       await this.fireStoreService.addSession(newSession, sessionId);
       await this.fireStoreService.updateUserSessionId(userId, sessionId);
-
+      await this.fireStoreService.updateUserSessionId(userId, sessionId);
       const toast = await this.toastController.create({
         message: 'Sesión creada correctamente!',
         duration: 2000,
