@@ -27,8 +27,15 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   currentTrackUrl: string | null = null;
 
 
-  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, private spotifyService: SpotifyService) {
-
+  constructor(
+    private http: HttpClient, 
+    public toastController: ToastController, 
+    public authService: AuthService, 
+    public fireStoreService: FirestoreService, 
+    private spotifyService: SpotifyService,
+  ) {
+    addIcons({ playOutline });
+    addIcons({ stopOutline });
   }
 
 
