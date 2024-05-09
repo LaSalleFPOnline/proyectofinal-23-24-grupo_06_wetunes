@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
 import { Platform } from '@ionic/angular';
-
+import { addIcons } from 'ionicons';
+import { playOutline, stopOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-search-page',
@@ -16,6 +17,7 @@ import { Platform } from '@ionic/angular';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
+
 export class TestPagePage implements OnInit, AfterViewInit {
   artistName: string = ''; // Variable vinculada al formulario
   artist: string | null = null; // Aquí se mostrará el nombre del artista
@@ -33,6 +35,8 @@ export class TestPagePage implements OnInit, AfterViewInit {
     public fireStoreService: FirestoreService,
     public router: Router,
     public platform: Platform) {
+    addIcons({ playOutline });
+    addIcons({ stopOutline });
 
   }
 
