@@ -6,6 +6,12 @@
     z-index: 1000;
 }
 
+ion-content {
+  .content{
+    margin: 3% 10% 3% 10%;
+  }
+}
+
 ion-list {
     padding-bottom: 50px; /* Ajusta este valor según el tamaño del reproductor */
   }
@@ -13,3 +19,5 @@ ion-list {
   #audioPlayer {
     color: #0b5eafff;
   }
+
+  

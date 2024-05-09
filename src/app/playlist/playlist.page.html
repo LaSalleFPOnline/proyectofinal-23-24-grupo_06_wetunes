@@ -1,26 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="m1"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center"><h1>Tus Playlists</h1></ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content padding>
-  <h1>Playlist</h1>
-  <h2 *ngIf="!playlistId">Oops! Parece que no tienes una playlist actualmente, ve a ajustes y créala!</h2>
-  <ion-list *ngIf="tracks.length > 0">
-    <ion-list-header>
-      <ion-label>Canciones añadidas</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let track of tracks; let i = index">
-      <ion-avatar slot="start">
-        <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
-          [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
-      </ion-avatar>
-      <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) - {{ track.artists[0].name }}
-      </ion-label>
-      <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
-      <ion-button *ngIf="track.preview_url" (click)="playTrack(i)">
-        <ion-icon name="play-outline"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="audioPlayer && track.preview_url" (click)="stopTrack()">
-        <ion-icon name="stop-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <div class="content">
+    <!-- <h1>Playlist</h1> -->
+    <h2 *ngIf="!playlistId">Oops! Parece que no tienes una playlist actualmente, ve a ajustes y créala!</h2>
+    <ion-list *ngIf="tracks.length > 0">
+      <ion-list-header>
+        <ion-label>Canciones añadidas</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let track of tracks; let i = index">
+        <ion-avatar slot="start">
+          <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
+            [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
+        </ion-avatar>
+        <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) - {{ track.artists[0].name }}
+        </ion-label>
+        <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
+        <ion-button *ngIf="track.preview_url" (click)="playTrack(i)">
+          <ion-icon name="play-outline"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="audioPlayer && track.preview_url" (click)="stopTrack()">
+          <ion-icon name="stop-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
   <audio #audioPlayer controls class="audio-player-fixed">
     <source [src]="currentTrackUrl" type="audio/mpeg">
     Your browser does not support the audio element.

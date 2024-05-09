@@ -1,18 +1,19 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <ion-buttons slot="start">
       <ion-menu-button menu="m1"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Home</ion-title>
+    <ion-title class="ion-text-center"><h1>Unete o Crea una Sesión</h1></ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
+  <div class="content">
   <h1>Administrar sesión <span *ngIf="sessionId !== ''">{{sessionId}}</span></h1>
   <div *ngIf="!isInSession">
     <ion-card>
       <ion-card-header>
-        <ion-card-title>Crear una Sesión</ion-card-title>
+        <ion-card-title><h3>Crear una Sesión</h3></ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-button expand="block" (click)="createNewSession()">CREAR</ion-button>
@@ -22,12 +23,14 @@
     <!-- Join a Session Form -->
     <ion-card>
       <ion-card-header>
-        <ion-card-title>Unirme a una Sesión</ion-card-title>
+        <ion-card-title><h3>Unirme a una Sesión</h3></ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-item>
-          <ion-label position="floating">ID</ion-label>
-          <ion-input type="text" [(ngModel)]="sessionId"></ion-input>
+        <ion-item class="item-background-color">
+          <div class="custom-item">
+            <ion-label position="floating">ID</ion-label>
+            <ion-input type="text" [(ngModel)]="sessionId"></ion-input>
+         </div>
         </ion-item>
         <ion-button expand="block" (click)="joinExistingSession()">UNIRME</ion-button>
       </ion-card-content>
@@ -44,4 +47,5 @@
       <ion-button expand="block" (click)="exitExistingSession()">SALIR</ion-button>
     </div>
   </div>
+</div>
 </ion-content>

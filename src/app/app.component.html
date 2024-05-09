@@ -1,5 +1,5 @@
 <ion-app >
-  <ion-split-pane contentId="main-content" [when] = "splitPaneService.getSplitPane()">
+  <ion-split-pane contentId="main-content" > <!-- [when] = "splitPaneService.getSplitPane()" -->
   <ion-menu contentId="main-content" menuId="m1">
     <ion-header>
       <ion-toolbar>
@@ -14,12 +14,12 @@
           <ion-label >Buscar Canciones</ion-label>
         </ion-item>
         <ion-item button [routerLink]="['/playlist']">
-          <span class="material-symbols-outlined" slot="start">settings</span>
+          <span class="material-symbols-outlined" slot="start"><ion-icon src="../assets/icon/musical-notes.svg"></ion-icon></span>
           <ion-label>Playlist</ion-label>
         </ion-item>
         <ion-item button [routerLink]="['/session']">
-          <span class="material-symbols-outlined" slot="start"><ion-icon src="../assets/icon/musical-notes.svg"></ion-icon></span>
-          <ion-label>Unirse Sesión</ion-label>
+          <span class="material-symbols-outlined" slot="start"><img class="icon-sesion" src="../assets/icon/dj_sesion_white.png" alt="djsesion"/></span>
+          <ion-label>Sesiones</ion-label>
         </ion-item>
         <ion-item button [routerLink]="['/tvmode']">
           <span class="material-symbols-outlined" slot="start">tv</span>
