@@ -31,7 +31,7 @@
   </ion-card>
 
   <!-- Sección para mostrar las canciones -->
-  <ion-list *ngIf="tracks.length > 0">
+  <ion-list class="ion-list-songs" *ngIf="tracks.length > 0">
     <ion-list-header>
       <h3>Top Tracks</h3>
     </ion-list-header>
@@ -41,8 +41,10 @@
         <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
           [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
       </ion-avatar>
-      <ion-label color="tertiary" (click)="goToTvMode(track)">{{ track.name }} -
-        {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
+      <ion-label>
+        {{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} <br> 
+        {{track.album.name}} - {{ track.artists[0].name }}
+      </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
       <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
         <ion-icon name="play-outline"></ion-icon>
@@ -52,8 +54,17 @@
       </ion-button>
     </ion-item>
   </ion-list>
-  <audio #audioPlayer controls class="audio-player-fixed">
-    <source [src]="currentTrackUrl" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+
+
+  <div class="containerFooter">
+      <div class="controlesMusic">
+        <audio #audioPlayer controls class="audio-player-fixed">
+          <source [src]="currentTrackUrl" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+  </div>
+
+
+
 </ion-content>

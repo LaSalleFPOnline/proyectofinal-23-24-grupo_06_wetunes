@@ -22,9 +22,12 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   playlistId: string | null = null
   tracks: any[] = [];
   audio: HTMLMediaElement | null = null;
+  reproducingTrack: boolean | undefined;
+  public tvMode: boolean = false;
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   currentTrackUrl: string | null = null;
+  currentTrack: any;
 
 
   constructor(
@@ -41,11 +44,17 @@ export class PlaylistPage implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadPlaylist();
+    this.reproducingTrack = false;
+    
   }
   ngAfterViewInit(): void {
     console.log('ngAfterViewInit: Audio player is initialized');
   }
 
+  // Método para activar/desactivar el modo TV
+  toggleTvMode(): void {
+    this.tvMode = !this.tvMode;
+  }
 
   async loadPlaylist(): Promise<void> {
     this.playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
@@ -117,6 +126,9 @@ export class PlaylistPage implements OnInit, AfterViewInit {
       }
       this.audioPlayer.nativeElement.play().then(() => {
         console.log("Reproducción iniciada!");
+        this.reproducingTrack = true;
+        this.goTvMode(track);
+        
       }).catch(e => {
         console.error("Error al reproducir la pista:", e);
         this.toastController.create({
@@ -132,6 +144,9 @@ export class PlaylistPage implements OnInit, AfterViewInit {
     } else {
       console.error("Índice de pista fuera de rango o audioPlayer no disponible.");
     }
+  }
+  goTvMode(track: any) {
+    this.currentTrack = track;
   }
 
   playNextTrack(nextIndex: number): void {
@@ -149,6 +164,7 @@ export class PlaylistPage implements OnInit, AfterViewInit {
       this.audioPlayer.nativeElement.pause();
       this.audioPlayer.nativeElement.currentTime = 0;
       this.currentTrackUrl = null;  // Reset URL to remove the audio element
+      this.reproducingTrack = false;
     }
     // this.audio?.pause();
     // this.audio = null;
