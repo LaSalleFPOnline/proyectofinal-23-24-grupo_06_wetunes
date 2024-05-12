@@ -43,7 +43,9 @@ export class PlaylistPage implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    this.loadPlaylist();
+    if(this.authService.getAuthState()){
+      this.loadPlaylist();
+    }
     this.reproducingTrack = false;
     
   }
