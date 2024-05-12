@@ -7,6 +7,7 @@ import { RegistroPage } from './registro/registro.page';
 import { LoginPage } from './login/login.page';
 import { CommonModule } from '@angular/common';
 import { SplitPaneService } from '../app/services/split-pane.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +26,27 @@ import { SplitPaneService } from '../app/services/split-pane.service';
 })
 export class AppComponent {
 
-  constructor(private http: HttpClient, private router: Router, public splitPaneService: SplitPaneService) {
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    public splitPaneService: SplitPaneService,
+    private authService: AuthService
+  ) {
 
   }
   ngOnInit(){    
+  }
+
+  logout(){
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+        console.log("Logout success");
+      },
+      error: (error) => {
+        console.log('Logout failed', error);
+      }
+    });
   }
 
 }
