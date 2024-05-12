@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
 import { IonicModule} from '@ionic/angular';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
@@ -24,7 +24,7 @@ import { AuthService } from './services/auth.service';
     CommonModule,
     ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
 
   constructor(
     private http: HttpClient, 
@@ -34,7 +34,8 @@ export class AppComponent {
   ) {
 
   }
-  ngOnInit(){    
+  ngOnInit(){   
+    console.log("App lanzada")
   }
 
   logout(){
@@ -48,5 +49,6 @@ export class AppComponent {
       }
     });
   }
+
 
 }
