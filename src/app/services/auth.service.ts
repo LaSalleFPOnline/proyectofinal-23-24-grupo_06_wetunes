@@ -27,7 +27,16 @@ export class AuthService {
         if (user)
             return user;
         else
-            throw new Error('user not logged');
+            throw new Error('User not logged');
+    }
+
+    getAuthLogin(): boolean{
+        const user = this.firebaseAuth.currentUser;
+        if(user){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     logout(): Observable<void>{
