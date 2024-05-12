@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ToastController } from '@ionic/angular';
+import { SplitPaneService } from '../services/split-pane.service';
 
 @Component({
   selector: 'app-login',
@@ -26,11 +27,14 @@ export class LoginPage implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private toastController: ToastController,
+    public splitPaneService: SplitPaneService
   ) { }
 
   ngOnInit() {
+    this.splitPaneService.getSplitPane();
     const showPassword = false;
   }
+
 
   /**
    * Este metodo obtiene los valores del formulario y los pasa como parametros al metodo 'login()' de 'authService'.
