@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
 import { IonicModule} from '@ionic/angular';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { RegistroPage } from './registro/registro.page';
 import { LoginPage } from './login/login.page';
 import { CommonModule } from '@angular/common';
@@ -26,8 +26,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent implements OnInit{
 
-  constructor(
-    private http: HttpClient, 
+  constructor( 
     private router: Router, 
     public splitPaneService: SplitPaneService,
     private authService: AuthService
@@ -39,15 +38,21 @@ export class AppComponent implements OnInit{
   }
 
   logout(){
-    this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/']);
-        console.log("Logout success");
-      },
-      error: (error) => {
-        console.log('Logout failed', error);
-      }
-    });
+    this.splitPaneService.splitPaneState = false;
+    if (this.splitPaneService.splitPaneState === false){
+      this.authService.logout().subscribe({
+        next: () => {
+          window.location.href = '/'; // Redirección a pagina de Login y refresca la pagina.
+          // this.router.navigateByUrl('/');
+          console.log("Logout success");
+        
+        },
+        error: (error) => {
+          console.log('Logout failed', error);
+        }
+      });
+    } else console.log(this.splitPaneService.splitPaneState)
+    
   }
 
 
