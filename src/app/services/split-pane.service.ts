@@ -24,6 +24,7 @@ export class SplitPaneService {
       this.splitPaneState = false;
     }
     return this.splitPaneState;
+    
   }
 
 }
