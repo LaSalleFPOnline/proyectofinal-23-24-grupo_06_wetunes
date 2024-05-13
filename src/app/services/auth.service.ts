@@ -4,8 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail }
 import { Observable, catchError, from, map } from "rxjs";
 import { updateEmail } from "firebase/auth";
 import { FirestoreService } from "./firestore.service";
-import { Auth, User, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, updateProfile } from "@angular/fire/auth";
-import { Observable, from } from "rxjs";
+
 
 
 @Injectable({
