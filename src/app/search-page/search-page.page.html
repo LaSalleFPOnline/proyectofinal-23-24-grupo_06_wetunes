@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button menu="m1"></ion-menu-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Search Page</ion-title>
+    <ion-title class="ion-text-center"><h1>Encuentra tu música</h1></ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -31,7 +31,7 @@
   </ion-card>
 
   <!-- Sección para mostrar las canciones -->
-  <ion-list *ngIf="tracks.length > 0">
+  <ion-list class="ion-list-songs" *ngIf="tracks.length > 0">
     <ion-list-header>
       <h3>Top Tracks</h3>
     </ion-list-header>
@@ -41,15 +41,31 @@
         <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
           [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
       </ion-avatar>
-      <ion-label color="tertiary" (click)="goToTvMode(track)">{{ track.name }} -
-        {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
+      <ion-label>
+        {{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} <br> 
+        {{track.album.name}} - {{ track.artists[0].name }}
+      </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
       <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
         <span class="material-symbols-outlined">play_arrow</span>
       </ion-button>
-      <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
-        <span class="material-symbols-outlined">pause</span>
+      <ion-button *ngIf="audioPlayer && track.preview_url" (click)="stopTrack()">
+        <ion-icon name="stop-outline"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>
+
+
+  <div class="containerFooter">
+      <div class="controlesMusic">
+        <audio #audioPlayer controls class="audio-player-fixed">
+          <source [src]="currentTrackUrl" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+  </div>
+
+
+
 </ion-content>
+

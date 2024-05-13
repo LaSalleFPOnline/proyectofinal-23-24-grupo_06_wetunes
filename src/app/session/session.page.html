@@ -1,18 +1,20 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <ion-buttons slot="start">
       <ion-menu-button menu="m1"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Home</ion-title>
+    <ion-title class="ion-text-center"><h1>Unete o Crea una Sesión</h1></ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <h1>Administrar sesión <span *ngIf="sessionId !== ''">{{sessionId}}</span></h1>
+  <div class="content">
+  <h1>Administrar Sesión</h1> 
+
   <div *ngIf="!isInSession">
     <ion-card>
       <ion-card-header>
-        <ion-card-title>Crear una Sesión</ion-card-title>
+        <ion-card-title><h3>Crear una Sesión</h3></ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-button expand="block" (click)="createNewSession()">CREAR</ion-button>
@@ -22,26 +24,29 @@
     <!-- Join a Session Form -->
     <ion-card>
       <ion-card-header>
-        <ion-card-title>Unirme a una Sesión</ion-card-title>
+        <ion-card-title><h3>Unirme a una Sesión</h3></ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-item>
-          <ion-label position="floating">ID</ion-label>
-          <ion-input type="text" [(ngModel)]="sessionId"></ion-input>
+        <ion-item class="item-background-color">
+          <div class="custom-item">
+            <ion-label position="floating">ID</ion-label>
+            <ion-input type="text" [(ngModel)]="sessionId"></ion-input>
+         </div>
         </ion-item>
         <ion-button expand="block" (click)="joinExistingSession()">UNIRME</ion-button>
       </ion-card-content>
     </ion-card>
   </div>
   <div *ngIf="isInSession">
-    <h2>Estás en una sesión actualmente <span *ngIf="isSessionAdmin">y eres el admin</span></h2>
+    <h3>Estás en una sesión actualmente <span *ngIf="isSessionAdmin">y eres el administrador</span></h3>
+    <h3 *ngIf="sessionId !== ''">Código de sesión: {{sessionId}}</h3>
     <div *ngIf="isSessionAdmin">
-      <h4>Borrar la sesión</h4>
-      <ion-button expand="block" (click)="removeAndExitSession()">BORRAR Y SALIR</ion-button>
+      <ion-button expand="block" (click)="removeAndExitSession()">BORRAR SESIÓN Y SALIR</ion-button>
     </div>
     <div *ngIf="isInSession && !isSessionAdmin">
       <h4>Salir de la sesión</h4>
       <ion-button expand="block" (click)="exitExistingSession()">SALIR</ion-button>
     </div>
   </div>
+</div>
 </ion-content>

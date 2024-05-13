@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
 import { Platform } from '@ionic/angular';
-
+import { addIcons } from 'ionicons';
+import { playOutline, stopOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-search-page',
@@ -16,39 +17,55 @@ import { Platform } from '@ionic/angular';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class TestPagePage implements OnInit {
+
+export class TestPagePage implements OnInit, AfterViewInit {
   artistName: string = ''; // Variable vinculada al formulario
   artist: string | null = null; // Aquí se mostrará el nombre del artista
   tracks: any[] = []; // Aquí almacenaremos las canciones
   trackId: string | undefined;
   audio: HTMLMediaElement | null = null;
 
-  constructor(private http: HttpClient, public toastController: ToastController, public authService: AuthService, public fireStoreService: FirestoreService, public router: Router,
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  currentTrackUrl: string | null = null;
+
+  constructor(
+    private http: HttpClient,
+    public toastController: ToastController,
+    public authService: AuthService,
+    public fireStoreService: FirestoreService,
+    public router: Router,
     public platform: Platform) {
+    addIcons({ playOutline });
+    addIcons({ stopOutline });
 
   }
 
   ngOnInit() {
+    console.log("Pagina cargada y preparada para buscar canciones");
   }
 
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit: Audio player is initialized');
+  }
+
+  /**
+   * Metodo para autenticarse con la API de Spotify para obtener el ACCESS_TOKEN, que luego es utilizado en una 
+   * llamada subsiguiente para buscar realmente los detalles del artista.
+   * Docs: https://developer.spotify.com/documentation/web-api/tutorials/getting-started
+   * @param artistName 
+   */
   getArtistDetails(artistName: string) {
-    /** Este método lo que realmente hace es obtener el ACCESS_TOKEN para la API de Spotify.
-     * Este ACCESS_TOKEN es lo necesario para poder realizar llamadas a la API de Spotify */
-
-
-    /** Docs: https://developer.spotify.com/documentation/web-api/tutorials/getting-started  */
-
     const clientId = '0e2fa6d6a1ad4ae4b7d05797746fcaa5';
     const clientSecret = 'ef98271d9a204ca8acb9689c1d4139e5';
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
     });
-
     const body = `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`;
 
+    /*Se realiza una solicitud POST a la URL de la API de Spotify para obtener el ACCESS_TOKEN. 
+      Usa las cabeceras y el cuerpo configurados anteriormente.*/
     this.http.post('https://accounts.spotify.com/api/token', body, { headers })
       .subscribe((data: any) => {
-        // Esto se ejecuta una vez Spotify responda a nuestra petición de obtener el token
         //console.log('Access token obtained from API Spotify')
         // console.log(data) // Pintamos el token por consola - OPCIONAL
         console.log(artistName)
@@ -57,8 +74,13 @@ export class TestPagePage implements OnInit {
       });
   }
 
+  /**
+   * Metodo hacer la conexión entre el cliente (la aplicación) y un servicio web externo para acceder a datos concretos (canciones)
+   * basados en el nombre del artista
+   * @param artistName 
+   * @param token 
+   */
   private searchArtist(artistName: string, token: string) {
-    // El header contiene unicamente el token
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -78,7 +100,11 @@ export class TestPagePage implements OnInit {
       });
   }
 
-  // Método privado para obtener las pistas más populares del artista
+  /**
+   *  Metodo para recuperar las pistas más populares de un artista específico utilizando la API de Spotify
+   * @param artistId 
+   * @param token 
+   */
   private getArtistTracks(artistId: string, token: string) {
     // Encabezados de la solicitud HTTP con el token de autorización
     const headers = new HttpHeaders({
@@ -91,35 +117,29 @@ export class TestPagePage implements OnInit {
         this.tracks = data.tracks;
       });
   }
+
   formatMillisecondsToMinutes(milliseconds: number): string {
     // Convertir milisegundos a minutos totales
     const totalMinutes = Math.floor(milliseconds / 60000);
     // Convertir milisegundos restantes a segundos
     const remainingSeconds = Math.floor((milliseconds % 60000) / 1000);
-
     // Formatear minutos y segundos para asegurar que siempre tengan dos dígitos
     const formattedMinutes = totalMinutes.toString().padStart(2, '0');
     const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
-
     // Devolver el tiempo en formato 00:00
     return `${formattedMinutes}:${formattedSeconds}`;
   }
 
+  /**
+   * Metodo para añadir una canción a una playlist del usuario con servicios de autenticación y bases de datos de Firebase
+   * para gestionar las listas de reproducción de los usuarios.
+   * @param songId 
+   */
   async addTrackToPlaylist(songId: string) {
-    // Aquí puedes añadir la lógica para agregar la canción realmente a la playlist.
-
     /*
-    1- Necesitamos obtener el playlistId del usuario actual, en caso de que no tenga,
-      significa que es la primera vez que va a añadir una canción, por lo tanto
-      tenemos que crear una playlist nueva y asignarle el id al usuario
-
-    2- Si no tenemos id, crear el objeto con los ids de las canciones y al insertar el playlist
-      en firebase ya nos dará el id que lo ponemos al usuario
-    
-    3- si si lo tenemos, simplemente añadir dicha canción al array de objetos existentes
-      en firebase
+    Obteniendo el ID de la playlist del usuario actual utilizando el servicio fireStoreService 
+    que a su vez recoge el ID de usuario autenticado mediante 'authService.getAuthState().uid'
     */
-
     const playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
 
     if (!playlistId) {
@@ -129,7 +149,7 @@ export class TestPagePage implements OnInit {
       // A continuación, actualizaremos el usuario para ponerle esta playlistId
       await this.fireStoreService.updateUserPlaylistId(this.authService.getAuthState().uid, newPlaylistId);
     } else {
-      // Significa que ya existe, por lo tanto solo tenemos que "pushear" una nueva canción
+      // Significa que ya existe, por lo tanto solo tenemos que añadir una nueva canción a la playlist exitente
       await this.fireStoreService.addSongToPlaylist(playlistId, songId);
     }
 
@@ -142,6 +162,10 @@ export class TestPagePage implements OnInit {
     toast.present();
   }
 
+  /**
+   * Metodo para redirigir al usuario a una vista específica basada en la información de un artista y una pista musical seleccionados.
+   * @param track 
+   */
   goToTvMode(track: any) {
     console.log(track.id);
     const trackId = track.id;
@@ -150,15 +174,42 @@ export class TestPagePage implements OnInit {
     this.router.navigate(['/tvmode/' + artistSelected + '/' + trackId]);
   }
 
+  /**
+   * Metodo para gestionar la reproducción de una pista de audio, utilizando una URL de vista previa
+   * @param previewUrl 
+   */
   playTrack(previewUrl: string): void {
-    this.audio = new Audio(previewUrl);
-    this.audio.play();
+
+    if (this.audioPlayer && this.audioPlayer.nativeElement) {
+      try {
+        if (this.audioPlayer.nativeElement.src !== previewUrl) {
+          this.audioPlayer.nativeElement.src = previewUrl;
+          this.audioPlayer.nativeElement.load();
+        }
+        this.audioPlayer.nativeElement.play().catch(e => {
+          console.error("Error al reproducir la pista:", e);
+          this.toastController.create({
+            message: 'Error al reproducir la pista. Por favor, intente de nuevo.',
+            duration: 2000
+          }).then(toast => toast.present());
+        });
+      } catch (e) {
+        console.error("Error en la reproducción:", e);
+      }
+    } else {
+      console.error("El elemento audioPlayer aún no está disponible.");
+    }
   }
 
+  /**
+   * Metodo para detener la reproducción de una pista de audio y 
+   * restablecer el estado del reproductor de audio a su posición inicial.
+   */
   stopTrack(): void {
-    this.audio?.pause();
-    this.audio = null;
+    if (this.audioPlayer) {
+      this.audioPlayer.nativeElement.pause();
+      this.audioPlayer.nativeElement.currentTime = 0;
+      this.currentTrackUrl = null;
+    }
   }
-
-
 }

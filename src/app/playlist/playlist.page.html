@@ -1,32 +1,80 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="dark">
     <ion-buttons slot="start">
       <ion-menu-button menu="m1"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Playlist</ion-title>
+    <ion-title class="ion-text-center"><h1>Tus Playlists</h1></ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <h1>Playlist</h1>
-  <h2 *ngIf="!playlistId">Oops! Parece que no tienes una playlist actualmente, ve a ajustes y creala!</h2>
-  <ion-list *ngIf="tracks.length > 0">
-    <ion-list-header>
-      <ion-label>Canciones añadidas</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let track of tracks">
-      <ion-avatar slot="start">
-        <!-- Añadir la imagen del álbum usando track.album.images[2].url -->
-        <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
-          [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
-      </ion-avatar>
-      <ion-label>{{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}})
-      </ion-label>
-      <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
-      <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
-      </ion-button>
-      <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <div class="content">
+    <!-- <h1>Playlist</h1> -->
+    <h2 *ngIf="!playlistId">Oops! Parece que no tienes una playlist actualmente, ve a ajustes y créala!</h2>
+    
+    <!-- Boton toggle para la tvMode -->
+    <div class="botonToggle">
+      <ion-toggle *ngIf="playlistId" (click)="toggleTvMode()"><p>Modo Pantalla Completa</p></ion-toggle>
+    </div>
+
+    <!-- Modo pantalla completa -->
+      <ion-list *ngIf="tvMode && currentTrack"> <!-- Verifica si hay una pista actual -->
+        <ion-item style="margin-bottom: 50px;">
+          <!-- Añadir la imagen del álbum usando currentTrack.album.images[2].url -->
+          <img class="imgTvMode" *ngIf="currentTrack.album && currentTrack.album.images && currentTrack.album.images.length > 2" 
+              [src]="currentTrack.album.images[0].url" 
+              [alt]="currentTrack.name + ' album cover'">
+          <div style="margin-left: 30px; margin-bottom: 150px;">
+            <div class="artistName">{{ currentTrack.artists[0].name }}</div>
+            <div class="trackName">{{ currentTrack.name }}</div>
+          </div>
+        </ion-item>
+      </ion-list>
+
+      <!-- Modo normal -->
+      <ion-list class="ion-list-songs" *ngIf="!tvMode && tracks.length > 0">
+        <ion-list-header>
+          <ion-label><h1>Canciones añadidas</h1></ion-label>
+        </ion-list-header>
+        <ion-item *ngFor="let track of tracks; let i = index">
+          <ion-avatar slot="start">
+            <img *ngIf="track.album && track.album.images && track.album.images.length > 2"
+              [src]="track.album.images[2].url" [alt]="track.name + ' album cover'">
+          </ion-avatar>
+          <ion-label>
+            {{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} <br> 
+            {{track.album.name}}<!--  - {{ track.artists[0].name }} -->
+          </ion-label>
+          <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
+          <ion-button *ngIf="track.preview_url" (click)="playTrack(i)">
+            <ion-icon name="play-outline"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="audioPlayer && track.preview_url" (click)="stopTrack()">
+            <ion-icon name="stop-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+
+
+      <div class="containerFooter">
+        <!-- Si no esta sonando se muestra el logo, se comprueba con el if -->
+        <div class="imgPortada" *ngIf="!currentTrack">
+          <img src="../../assets/icon/LogoWetunes.jpg" alt="Imagen">
+        </div>
+        <!-- Si está sonando se muestra la portada -->
+        <div class="imgPortada" *ngIf="currentTrack">
+          <img [src]="currentTrack.album.images[0].url" alt="Imagen">
+        </div>
+        <div class="controlesMusic">
+          <div>
+            <audio color="primary" #audioPlayer controls class="audio-player-fixed">
+              <source [src]="currentTrackUrl" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+      </div>
+    
+  </div>
 </ion-content>

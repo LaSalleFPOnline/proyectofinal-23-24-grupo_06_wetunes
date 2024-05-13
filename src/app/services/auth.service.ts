@@ -4,6 +4,8 @@ import { createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail }
 import { Observable, catchError, from, map } from "rxjs";
 import { updateEmail } from "firebase/auth";
 import { FirestoreService } from "./firestore.service";
+import { Auth, User, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, updateProfile } from "@angular/fire/auth";
+import { Observable, from } from "rxjs";
 
 
 @Injectable({
@@ -32,7 +34,21 @@ export class AuthService {
         if (user)
             return user;
         else
-            throw new Error('user not logged');
+            throw new Error('User not logged');
+    }
+
+    getAuthLogin(): boolean{
+        const user = this.firebaseAuth.currentUser;
+        if(user){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    logout(): Observable<void>{
+        const promise = signOut(this.firebaseAuth);
+        return from(promise);
     }
 
     resetPassword(email: string): Observable<void> {
