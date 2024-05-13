@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Auth, User, sendEmailVerification, signInWithEmailAndPassword, updatePassword } from "@angular/fire/auth";
+import { Auth, User, sendEmailVerification, signInWithEmailAndPassword, signOut, updatePassword } from "@angular/fire/auth";
 import { createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
 import { Observable, catchError, from, map } from "rxjs";
 import { updateEmail } from "firebase/auth";
