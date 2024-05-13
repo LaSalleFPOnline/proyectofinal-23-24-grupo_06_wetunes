@@ -25,5 +25,9 @@ export const routes: Routes = [
   {
     path: 'tvmode/:artistSelected/:trackId',
     loadComponent: () => import('./tvmode/tvmode.page').then( m => m.TvmodePage)
+  },
+  {
+    path: 'user-profile',
+    loadComponent: () => import('./user-profile/user-profile.page').then( m => m.UserProfilePage)
   }
 ];

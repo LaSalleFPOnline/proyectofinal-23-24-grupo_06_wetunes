@@ -1,0 +1,42 @@
+
+.profile {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+ion-card-title {
+  color: white;
+}
+
+
+ion-content{
+
+  form{
+      margin: 3% 10% 3% 10%;
+      ion-item{
+          margin: 0% 1% 2% 1%;
+      }
+      ion-button{
+          border-radius: 5px;
+          margin: 0% 1% 0% 1%;
+      }
+  }
+  ion-list, ion-card{
+      margin: 2% 11% 1% 11%;
+
+      ion-card-title{
+          display: flex;
+          flex-direction: column;
+          //align-items: center;
+          justify-content: center;
+          height: 100%;
+          margin: 0% 0% 1% 2%;
+      }
+  }
+
+  h3{
+      margin-bottom: 2%;
+  }
+
+}

@@ -75,4 +75,17 @@ export class LoginPage implements OnInit {
     toast.present();
   }
 
+  forgotPassword() {
+    const emailControl = this.logForm.get('email');
+
+    if (emailControl && emailControl.value) {
+        this.authService.resetPassword(emailControl.value).subscribe({
+            next: () => alert('Por favor revisa tu correo para restablecer tu contraseña.'),
+            error: (error) => alert('Error enviando correo de recuperación: ' + error)
+        });
+    } else {
+        alert('Por favor ingresa tu correo electrónico.');
+    }
+}
+
 }
