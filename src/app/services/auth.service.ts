@@ -1,14 +1,17 @@
 import { Injectable } from "@angular/core";
-import { Auth, User, signInWithEmailAndPassword } from "@angular/fire/auth";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { Observable, from } from "rxjs";
+import { Auth, User, sendEmailVerification, signInWithEmailAndPassword, updatePassword } from "@angular/fire/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { Observable, catchError, from, map } from "rxjs";
+import { updateEmail } from "firebase/auth";
+import { FirestoreService } from "./firestore.service";
+
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class AuthService {
-    constructor(private firebaseAuth: Auth) { }
+    constructor(private firebaseAuth: Auth, private firestoreService: FirestoreService ) { }
 
     register(email: string, username: string, passw: string): Observable<void> {
         const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, passw)
@@ -25,9 +28,37 @@ export class AuthService {
 
     getAuthState(): User {
         const user = this.firebaseAuth.currentUser
+        console.log("Usuario", user);
         if (user)
             return user;
         else
             throw new Error('user not logged');
     }
+
+    resetPassword(email: string): Observable<void> {
+      const promise = sendPasswordResetEmail(this.firebaseAuth, email)
+          .then(() => console.log('Correo de recuperación enviado'))
+          .catch((error) => console.error('Error enviando correo de recuperación', error));
+
+      return from(promise);
+  }
+
+  updateUserPassword(newPassword: string): Observable<void> {
+    const user = this.firebaseAuth.currentUser;
+    if (user) {
+      const promise = updatePassword(user, newPassword).then(() => {
+        console.log('Password updated successfully');
+      }).catch((error) => {
+        console.error('Error updating password', error);
+        throw error;
+      });
+
+      return from(promise);
+    } else {
+      console.error('No user logged in');
+      throw new Error('No user logged in');
+    }
+  }
+
+
 }

@@ -24,10 +24,8 @@
       </ion-label>
       <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
       <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
-        <ion-icon name="play-outline"></ion-icon>
       </ion-button>
       <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
-        <ion-icon name="stop-outline"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>

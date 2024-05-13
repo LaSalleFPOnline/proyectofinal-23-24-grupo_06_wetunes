@@ -45,10 +45,10 @@
         {{formatMillisecondsToMinutes(track.duration_ms)}} ({{track.album.name}}) </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
       <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">
-        <ion-icon name="play-outline"></ion-icon>
+        <span class="material-symbols-outlined">play_arrow</span>
       </ion-button>
       <ion-button *ngIf="audio && track.preview_url" (click)="stopTrack()">
-        <ion-icon name="stop-outline"></ion-icon>
+        <span class="material-symbols-outlined">pause</span>
       </ion-button>
     </ion-item>
   </ion-list>

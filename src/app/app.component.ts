@@ -13,13 +13,13 @@ import { SplitPaneService } from '../app/services/split-pane.service';
   templateUrl: 'app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [ 
-    IonRouterOutlet, 
-    IonicModule, 
-    RouterLink, 
-    HttpClientModule, 
-    RegistroPage, 
-    LoginPage, 
+  imports: [
+    IonRouterOutlet,
+    IonicModule,
+    RouterLink,
+    HttpClientModule,
+    RegistroPage,
+    LoginPage,
     CommonModule,
     ],
 })
@@ -28,7 +28,7 @@ export class AppComponent {
   constructor(private http: HttpClient, private router: Router, public splitPaneService: SplitPaneService) {
 
   }
-  ngOnInit(){    
+  ngOnInit(){
   }
 
 }
