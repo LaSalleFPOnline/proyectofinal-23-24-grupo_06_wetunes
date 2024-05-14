@@ -9,7 +9,7 @@
 
 <ion-content [fullscreen]="true" class="ion-padding ion-text-center">
   <div class="login-container">
-    <!-- <img src="../../assets/icon/LogoWetunes.jpg" alt="LogoWetunes" class="logo"> -->
+    <img src="../../assets/icon/logoWeTunes2.png" alt="LogoWetunes" class="logo">
     <h1>Iniciar Sesión</h1>
     <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
       <ion-item>
@@ -24,9 +24,10 @@
         </span>
       </ion-item>
       <div class="forgot-password">
-        <ion-button fill="clear" class="ion-no-padding">¿Olvidaste tu contraseña?</ion-button>
-      </div>
-      <ion-button type="submit" expand="block" class="login-button">Inicia</ion-button>
+        <ion-button fill="clear" class="ion-no-padding" (click)="forgotPassword()">¿Olvidaste tu contraseña?</ion-button>
+    </div>
+      <ion-button type="submit" expand="block" class="login-button" [routerLink]="['/search-page']">Inicia</ion-button>
+
       <p class="register-link">¿Nuevo en WeTunes? <a href="/register">Regístrate</a></p>
     </form>
   </div>
