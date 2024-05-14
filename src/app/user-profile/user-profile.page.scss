@@ -23,7 +23,9 @@ ion-content{
       }
   }
   ion-list, ion-card{
-      margin: 2% 11% 1% 11%;
+      margin: 5% 11% 1% 11%;
+      padding: 3%;
+      background-color: #274b59;
 
       ion-card-title{
           display: flex;

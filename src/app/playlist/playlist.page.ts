@@ -10,6 +10,7 @@ import { addIcons } from 'ionicons';
 import { playOutline } from 'ionicons/icons';
 import { stopOutline } from 'ionicons/icons';
 
+
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.page.html',

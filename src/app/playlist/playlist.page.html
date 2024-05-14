@@ -27,6 +27,7 @@
           <div style="margin-left: 30px; margin-bottom: 150px;">
             <div class="artistName">{{ currentTrack.artists[0].name }}</div>
             <div class="trackName">{{ currentTrack.name }}</div>
+            <div class="trackName">Votos: {{currentTrack.votes}}</div>
           </div>
         </ion-item>
       </ion-list>
@@ -43,10 +44,10 @@
           </ion-avatar>
           <ion-label>
             {{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} <br> 
-            {{track.album.name}} - {{ track.artists[0].name }} | Votos: {{track.votes}} <br> 
+            {{track.album.name}} - {{ track.artists[0].name }} <br> Votos: {{track.votes}} <br> 
           </ion-label>
           <ion-button slot="end" (click)="voteSong(track.id)">
-            Vote
+            <img class="icon-heart material-symbols-outlined" src="../../assets/icon/heart.png"/>
           </ion-button>
           <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
           <ion-button *ngIf="track.preview_url" (click)="playTrack(i)">
