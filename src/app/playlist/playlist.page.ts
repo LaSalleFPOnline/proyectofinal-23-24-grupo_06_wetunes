@@ -81,14 +81,15 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   }
 
   async getTracks(playlistId: string, token: string): Promise<void> {
-    let songs = await this.fireStoreService.retrievePlaylist(playlistId);
+    let playlist = await this.fireStoreService.retrievePlaylist(playlistId);
+    console.log(playlist);
 
-    songs.songIds.forEach(async s => {
-      await this.getTrack(s, token);
+    playlist.entries.forEach(async e => {
+      await this.getTrack(e.songId, e.votes, token);
     })
   }
 
-  async getTrack(songId: string, token: string) {
+  async getTrack(songId: string, votes: number, token: string) {
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
@@ -96,6 +97,7 @@ export class PlaylistPage implements OnInit, AfterViewInit {
     // Petición HTTP GET para obtener las pistas más populares del artista
     this.http.get(`https://api.spotify.com/v1/tracks/${songId}`, { headers })
       .subscribe((data: any) => {
+        data.votes = votes;
         // Asignación de las pistas obtenidas al array de tracks
         this.tracks.push(data);
       });
@@ -176,8 +178,7 @@ export class PlaylistPage implements OnInit, AfterViewInit {
 
   async voteSong(songId: string): Promise<void> {
     try {
-      await this.fireStoreService.voteSong(songId);
-
+      await this.fireStoreService.voteSong(this.playlistId || '', songId);
     } catch (error) {
       console.error('Error al votar:', error);
     }
