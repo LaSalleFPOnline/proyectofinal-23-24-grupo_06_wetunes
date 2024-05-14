@@ -1,5 +1,10 @@
 export interface PlaylistInterface {
-  songIds: string[];
+  entries: PlaylistEntry[];
+}
+
+export interface PlaylistEntry {
+  songId: string,
+  votes: number
 }
 
 export interface VoteInterface {
