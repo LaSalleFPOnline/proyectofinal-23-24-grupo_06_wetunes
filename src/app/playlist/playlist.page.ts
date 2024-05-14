@@ -86,12 +86,11 @@ export class PlaylistPage implements OnInit, AfterViewInit {
     console.log(playlist);
 
     playlist.entries.forEach(async e => {
-      await this.getTrack(e.songId, token);
+      await this.getTrack(e.songId, e.votes, token);
     })
-    this.loadTrackWithVotes(); //En este punto las canciones ya estan añadidas a la variable tracks
   }
 
-  async getTrack(songId: string, token: string) {
+  async getTrack(songId: string, votes: number, token: string) {
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
@@ -99,6 +98,7 @@ export class PlaylistPage implements OnInit, AfterViewInit {
     // Petición HTTP GET para obtener las pistas más populares del artista
     this.http.get(`https://api.spotify.com/v1/tracks/${songId}`, { headers })
       .subscribe((data: any) => {
+        data.votes = votes;
         // Asignación de las pistas obtenidas al array de tracks
         this.tracks.push(data);
       });
@@ -179,7 +179,7 @@ export class PlaylistPage implements OnInit, AfterViewInit {
 
   async voteSong(songId: string): Promise<void> {
     try {
-      await this.fireStoreService.voteSong(songId);
+      await this.fireStoreService.voteSong(this.playlistId || '', songId);
     } catch (error) {
       console.error('Error al votar:', error);
     }
@@ -203,18 +203,6 @@ export class PlaylistPage implements OnInit, AfterViewInit {
       return null;
     }
   }   
-  
-  async loadTrackWithVotes(): Promise<void> {
-    console.log("entra", this.tracks); //Este muestra el array correcto
-    console.log("entra2", this.tracks[0]); //Este muestra undefined
-      // Cargamos las canciones con sus votos
-      this.tracks.forEach( track => {
-        console.log("entra3");
-        console.log("track id", track.id);
-        //const votes = await this.getVotes(track.id);
-        //this.votosPorCancion[track.id] = votes;
-      });
-  }
 
 }
 

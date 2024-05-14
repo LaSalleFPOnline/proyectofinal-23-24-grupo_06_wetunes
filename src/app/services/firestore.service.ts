@@ -51,6 +51,7 @@ export class FirestoreService {
     const docSnapshot = await getDoc(playlistDocRef);
     if (docSnapshot.exists()) {
       const playlistData = docSnapshot.data() as PlaylistInterface;
+      playlistData.entries.sort((e1, e2) => e2.votes - e1.votes);
       return playlistData;
     } else {
       throw new Error('Playlist doesnt exist');
@@ -189,7 +190,7 @@ export class FirestoreService {
       const playlistData = docSnapshot.data() as PlaylistInterface;
       if (playlistData.entries.map(e => e.songId).includes(songId)) {
         playlistData.entries = playlistData.entries.filter(e => e.songId != songId);
-        await updateDoc(playlistDocRef, { songIds: playlistData.entries });
+        await updateDoc(playlistDocRef, { entries: playlistData.entries });
       }
     } else {
       throw new Error('Playlist not found');
@@ -215,30 +216,19 @@ export class FirestoreService {
   }
 
   //ERIC: Código para votar canciones
-  async voteSong(songId: string): Promise<void> {
+  async voteSong(playlistId: string, songId: string): Promise<void> {
     try {
-      // Primero, necesitamos obtener la referencia al documento de voto en la colección "votes"
-      // Realizamos una consulta para encontrar el documento que tenga el campo "songId" igual al ID de la canción
-      const querySnapshot = await getDocs(query(collection(this.firestore, 'votes'), where("songId", "==", songId)));
-
-      // Verificamos si se encontró algún documento
-      if (!querySnapshot.empty) {
-        // Suponemos que solo hay un documento con el mismo songId (si no, tendríamos que manejar esa situación)
-        const voteDocRef = querySnapshot.docs[0].ref;
-
-        // Obtenemos los datos del voto actual
-        const voteData = (await getDoc(voteDocRef)).data() as VoteInterface;
-
-        // Incrementamos el voto en 1
-        const updatedVote = {
-          voto: voteData.voto + 1
-        };
-
-        // Actualizamos el documento con el voto incrementado
-        await updateDoc(voteDocRef, updatedVote);
-        console.log('Voto registrado exitosamente.');
+      const playlistDocRef = doc(this.firestore, 'playlists', playlistId);
+      const docSnapshot = await getDoc(playlistDocRef);
+      if (docSnapshot.exists()) {
+        const playlistData = docSnapshot.data() as PlaylistInterface;
+        if (playlistData.entries.map(e => e.songId).includes(songId)) {
+          let i = playlistData.entries.findIndex(e => e.songId == songId);
+          playlistData.entries[i].votes += 1;
+          await updateDoc(playlistDocRef, { entries: playlistData.entries });
+        }
       } else {
-        console.error('No se encontró ningún voto para la canción.');
+        throw new Error('Playlist not found');
       }
     } catch (error) {
       console.error('Error al votar:', error);
