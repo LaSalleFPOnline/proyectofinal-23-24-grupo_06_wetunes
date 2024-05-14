@@ -19,6 +19,10 @@ ion-content {
   }
 }
 
+ion-button{
+  margin-left: 5px;
+}
+
 ion-list {
   padding-bottom: 50px; /* Ajusta este valor según el tamaño del reproductor */
 }
@@ -68,6 +72,11 @@ font-weight: 200;
 
 .controlesMusic {
   flex: 1;
+}
+
+.icon-heart{
+  width: 16px;
+  fill: white;
 }
 
 @media only screen and (max-width: 768px) {

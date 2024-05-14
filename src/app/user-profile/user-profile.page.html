@@ -16,13 +16,11 @@
       <ion-card-title>{{ usuario?.nombre }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      Email: {{ usuario?.email }}
+      <p>Email: <span style="color: #fa8733;">{{ usuario?.email }}</span></p>
       <br>
-      Password:
-      <ion-button fill="outline" size="small" (click)="changePassword()">Change password</ion-button>
+      <p>Password: <span><ion-button fill="outline" size="small" (click)="changePassword()">Change password</ion-button></span></p>
       <br>
-      Playlists:
-      <ion-button fill="outline" size="small" (click)="goToPlaylists()">Go to Playlists</ion-button>
+      <p>Playlists: <span><ion-button fill="outline" size="small" (click)="goToPlaylists()">Go to Playlists</ion-button></span></p>
     </ion-card-content>
   </ion-card>
 </ion-content>
