@@ -9,7 +9,7 @@ ion-content {
 
         ion-button {
             border-radius: 5px;
-            margin: 0% 1% 0% 1%;
+            margin: 0% 1% 0% 0%;
         }
     }
     .ion-list-songs{
@@ -56,7 +56,11 @@ ion-content {
         height: 15vh;
         position: fixed;
         box-shadow: 0px 0px 10px #fa8733;
-      }   
+      }
+      
+      ion-button {
+        margin-left: 5px;
+    }
 
     
 }
