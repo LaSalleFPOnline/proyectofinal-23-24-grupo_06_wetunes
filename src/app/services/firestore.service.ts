@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Firestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, query, where, getDocs } from "@angular/fire/firestore";
 import { UserInterface } from "../interfaces/user.interface";
-import { PlaylistInterface } from "../interfaces/playlist.interface";
+import { PlaylistInterface, VoteInterface } from "../interfaces/playlist.interface";
 import { SessionInterface } from "../interfaces/session.interface";
 
 // Servicio proveedor de métodos para interactuar con Firestore
@@ -9,6 +9,8 @@ import { SessionInterface } from "../interfaces/session.interface";
   providedIn: 'root'
 })
 export class FirestoreService {
+  fireStoreService: any;
+ 
 
   // Inyecta la instancia de Firestore al servicio
   constructor(private firestore: Firestore) { }
@@ -111,12 +113,25 @@ export class FirestoreService {
   }
 
   // Crea una nueva lista de reproducción con una canción específica
+  // ERIC: Aquí podriamos crear la lista añadiendo el valor de votos = 0 para cada canción ademas del songId
   async createPlaylistWithSong(songId: string): Promise<string> {
-    const newPlaylist: PlaylistInterface = { songIds: [songId] };
+    
+    const newPlaylist: PlaylistInterface = { songIds: [songId]};
+    // ERIC: Crea un objeto para almacenar el voto asociado a la canción
+    const vote: VoteInterface = {
+      songId: songId,
+      voto: 0 // Por defecto, el voto comienza en 0
+    };
+
     const playlistsRef = collection(this.firestore, 'playlists');
     try {
       const docRef = await addDoc(playlistsRef, newPlaylist);
       console.log("Playlist created with ID:", docRef.id);
+
+      // ERIC: Guarda el voto asociado a la canción en una colección de votos
+      const votesRef = collection(this.firestore, 'votes');
+      await setDoc(doc(votesRef, docRef.id), vote);
+      
       return docRef.id;
     } catch (error) {
       console.error("Error adding playlist: ", error);
@@ -125,6 +140,7 @@ export class FirestoreService {
   }
 
   // Agrega una canción a una lista de reproducción existente
+  // ERIC: Aquí le pasariamos el valor de los votos a firebase
   async addSongToPlaylist(playlistId: string, songId: string): Promise<void> {
     const playlistDocRef = doc(this.firestore, 'playlists', playlistId);
     const docSnapshot = await getDoc(playlistDocRef);
@@ -133,6 +149,17 @@ export class FirestoreService {
       if (!playlistData.songIds.includes(songId)) {
         playlistData.songIds.push(songId);
         await updateDoc(playlistDocRef, { songIds: playlistData.songIds });
+
+        // ERIC: Crea un voto asociado a esa canción con un valor inicial de 0
+        const vote: VoteInterface = {
+          songId: songId,
+          voto: 0
+        };
+
+        // ERIC: Guarda el voto en la colección de votos
+        const votesRef = collection(this.firestore, 'votes');
+        await addDoc(votesRef, vote);
+
       }
     } else {
       throw new Error('Playlist not found');
@@ -169,6 +196,60 @@ export class FirestoreService {
       console.log('Session IDs cleared successfully.');
     } catch (error) {
       console.error('Error updating documents: ', error);
+    }
+  }
+
+  //ERIC: Código para votar canciones
+  async voteSong(songId: string): Promise<void> {
+    try {
+      // Primero, necesitamos obtener la referencia al documento de voto en la colección "votes"
+      // Realizamos una consulta para encontrar el documento que tenga el campo "songId" igual al ID de la canción
+      const querySnapshot = await getDocs(query(collection(this.firestore, 'votes'), where("songId", "==", songId)));
+      
+      // Verificamos si se encontró algún documento
+      if (!querySnapshot.empty) {
+        // Suponemos que solo hay un documento con el mismo songId (si no, tendríamos que manejar esa situación)
+        const voteDocRef = querySnapshot.docs[0].ref;
+        
+        // Obtenemos los datos del voto actual
+        const voteData = (await getDoc(voteDocRef)).data() as VoteInterface;
+        
+        // Incrementamos el voto en 1
+        const updatedVote = {
+          voto: voteData.voto + 1
+        };
+        
+        // Actualizamos el documento con el voto incrementado
+        await updateDoc(voteDocRef, updatedVote);
+        console.log('Voto registrado exitosamente.');
+      } else {
+        console.error('No se encontró ningún voto para la canción.');
+      }
+    } catch (error) {
+      console.error('Error al votar:', error);
+    }
+  }  
+
+  //Obtener votos de la canción para mostrarlos por pantalla
+  async getVotesForSong(songId: string): Promise<number | null> {
+    try {
+      // Realizamos una consulta para encontrar el documento que tenga el campo "songId" igual al ID de la canción
+      const querySnapshot = await getDocs(query(collection(this.firestore, 'votes'), where("songId", "==", songId)));
+  
+      if (!querySnapshot.empty) {
+        // Como ya tenemos el documento de voto a través de la consulta, no necesitamos obtenerlo de nuevo
+        const voteData = querySnapshot.docs[0].data() as VoteInterface;
+        console.log("voteData", voteData);
+        // Devolver el número de votos
+        return voteData.voto;
+
+      } else {
+        console.error('No se encontró ningún voto para la canción.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al obtener los votos:', error);
+      return null;
     }
   }
 }

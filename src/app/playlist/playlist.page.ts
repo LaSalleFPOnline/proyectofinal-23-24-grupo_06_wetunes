@@ -18,7 +18,7 @@ import { stopOutline } from 'ionicons/icons';
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class PlaylistPage implements OnInit, AfterViewInit {
-
+  
   playlistId: string | null = null
   tracks: any[] = [];
   audio: HTMLMediaElement | null = null;
@@ -28,6 +28,8 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   currentTrackUrl: string | null = null;
   currentTrack: any;
+  public getVotesSong: boolean = false;
+  votosPorCancion: { [songId: string]: number | null } = {}; // Nueva propiedad para almacenar los votos por canción
 
 
   constructor(
@@ -85,6 +87,7 @@ export class PlaylistPage implements OnInit, AfterViewInit {
     songs.songIds.forEach(async s => {
       await this.getTrack(s, token);
     })
+    this.loadTrackWithVotes(); //En este punto las canciones ya estan añadidas a la variable tracks
   }
 
   async getTrack(songId: string, token: string) {
@@ -173,4 +176,46 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   }
 
 
+  async voteSong(songId: string): Promise<void> {
+    try {
+      await this.fireStoreService.voteSong(songId);
+
+    } catch (error) {
+      console.error('Error al votar:', error);
+    }
+  }
+
+  async getVotes(songId: string): Promise<number | null> {
+    try {
+      // Obtener los votos de Firestore a través del servicio
+      const votes = await this.fireStoreService.getVotesForSong(songId);
+      
+      // Si hay votos para esta canción, devolver el número de votos
+      if (votes !== null) {
+        console.log("votes", votes); //Aquí se muestran los votos pero no se ven en el navegador
+        return votes;
+      } else {
+        console.error('No se encontraron votos para la canción.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al obtener los votos:', error);
+      return null;
+    }
+  }   
+  
+  async loadTrackWithVotes(): Promise<void> {
+    console.log("entra", this.tracks); //Este muestra el array correcto
+    console.log("entra2", this.tracks[0]); //Este muestra undefined
+      // Cargamos las canciones con sus votos
+      this.tracks.forEach( track => {
+        console.log("entra3");
+        console.log("track id", track.id);
+        //const votes = await this.getVotes(track.id);
+        //this.votosPorCancion[track.id] = votes;
+      });
+  }
+
 }
+
+

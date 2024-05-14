@@ -43,7 +43,7 @@
       </ion-avatar>
       <ion-label>
         {{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} <br> 
-        {{track.album.name}} - {{ track.artists[0].name }}
+        {{track.album.name}} <!-- - {{ track.artists[0].name }} --> <!-- No hace falta mostrar el artista porque es el que has buscado -->
       </ion-label>
       <ion-button slot="end" (click)="addTrackToPlaylist(track.id)">Add to Playlist</ion-button>
       <ion-button *ngIf="track.preview_url && !audio" (click)="playTrack(track.preview_url)">

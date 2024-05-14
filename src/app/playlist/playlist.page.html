@@ -43,8 +43,13 @@
           </ion-avatar>
           <ion-label>
             {{ track.name }} - {{formatMillisecondsToMinutes(track.duration_ms)}} <br> 
-            {{track.album.name}}<!--  - {{ track.artists[0].name }} -->
+            {{track.album.name}} - {{ track.artists[0].name }} <br> 
+              <!-- Mostrar los votos de la canción -->
+              Votos: {{ getVotes(track.id) }}
           </ion-label>
+          <ion-button slot="end" (click)="voteSong(track.id)">
+            Vote
+          </ion-button>
           <ion-button slot="end" (click)="removeSong(track.id)">Remove</ion-button>
           <ion-button *ngIf="track.preview_url" (click)="playTrack(i)">
             <ion-icon name="play-outline"></ion-icon>
