@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Auth, User, sendEmailVerification, signInWithEmailAndPassword, signOut, updatePassword } from "@angular/fire/auth";
+import { Auth, User, authState, sendEmailVerification, signInWithEmailAndPassword, signOut, updatePassword } from "@angular/fire/auth";
 import { createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
 import { Observable, catchError, from, map } from "rxjs";
 import { updateEmail } from "firebase/auth";
@@ -34,6 +34,10 @@ export class AuthService {
             return user;
         else
             throw new Error('User not logged');
+    }
+
+    getAuthStateUser(): Observable<User | null> {
+      return authState(this.firebaseAuth);
     }
 
     getAuthLogin(): boolean{
