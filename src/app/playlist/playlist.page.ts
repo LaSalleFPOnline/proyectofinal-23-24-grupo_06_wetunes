@@ -82,10 +82,11 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   }
 
   async getTracks(playlistId: string, token: string): Promise<void> {
-    let songs = await this.fireStoreService.retrievePlaylist(playlistId);
+    let playlist = await this.fireStoreService.retrievePlaylist(playlistId);
+    console.log(playlist);
 
-    songs.songIds.forEach(async s => {
-      await this.getTrack(s, token);
+    playlist.entries.forEach(async e => {
+      await this.getTrack(e.songId, token);
     })
     this.loadTrackWithVotes(); //En este punto las canciones ya estan añadidas a la variable tracks
   }
@@ -179,7 +180,6 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   async voteSong(songId: string): Promise<void> {
     try {
       await this.fireStoreService.voteSong(songId);
-
     } catch (error) {
       console.error('Error al votar:', error);
     }

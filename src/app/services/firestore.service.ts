@@ -131,21 +131,21 @@ export class FirestoreService {
   // ERIC: Aquí podriamos crear la lista añadiendo el valor de votos = 0 para cada canción ademas del songId
   async createPlaylistWithSong(songId: string): Promise<string> {
 
-    const newPlaylist: PlaylistInterface = { songIds: [songId] };
+    const newPlaylist: PlaylistInterface = { entries: [{songId: songId, votes:0}] };
     // ERIC: Crea un objeto para almacenar el voto asociado a la canción
-    const vote: VoteInterface = {
+    /*const vote: VoteInterface = {
       songId: songId,
       voto: 0 // Por defecto, el voto comienza en 0
-    };
+    };*/
 
     const playlistsRef = collection(this.firestore, 'playlists');
     try {
       const docRef = await addDoc(playlistsRef, newPlaylist);
       console.log("Playlist created with ID:", docRef.id);
 
-      // ERIC: Guarda el voto asociado a la canción en una colección de votos
+     /* // ERIC: Guarda el voto asociado a la canción en una colección de votos
       const votesRef = collection(this.firestore, 'votes');
-      await setDoc(doc(votesRef, docRef.id), vote);
+      await setDoc(doc(votesRef, docRef.id), vote);*/
 
       return docRef.id;
     } catch (error) {
@@ -161,11 +161,11 @@ export class FirestoreService {
     const docSnapshot = await getDoc(playlistDocRef);
     if (docSnapshot.exists()) {
       const playlistData = docSnapshot.data() as PlaylistInterface;
-      if (!playlistData.songIds.includes(songId)) {
-        playlistData.songIds.push(songId);
-        await updateDoc(playlistDocRef, { songIds: playlistData.songIds });
+      if (!playlistData.entries.map(e => e.songId).includes(songId)) {
+        playlistData.entries.push({songId: songId, votes: 0})
+        await updateDoc(playlistDocRef, { entries: playlistData.entries });
 
-        // ERIC: Crea un voto asociado a esa canción con un valor inicial de 0
+       /* // ERIC: Crea un voto asociado a esa canción con un valor inicial de 0
         const vote: VoteInterface = {
           songId: songId,
           voto: 0
@@ -173,7 +173,7 @@ export class FirestoreService {
 
         // ERIC: Guarda el voto en la colección de votos
         const votesRef = collection(this.firestore, 'votes');
-        await addDoc(votesRef, vote);
+        await addDoc(votesRef, vote);*/
 
       }
     } else {
@@ -187,9 +187,9 @@ export class FirestoreService {
     const docSnapshot = await getDoc(playlistDocRef);
     if (docSnapshot.exists()) {
       const playlistData = docSnapshot.data() as PlaylistInterface;
-      if (playlistData.songIds.includes(songId)) {
-        playlistData.songIds = playlistData.songIds.filter(s => s != songId);
-        await updateDoc(playlistDocRef, { songIds: playlistData.songIds });
+      if (playlistData.entries.map(e => e.songId).includes(songId)) {
+        playlistData.entries = playlistData.entries.filter(e => e.songId != songId);
+        await updateDoc(playlistDocRef, { songIds: playlistData.entries });
       }
     } else {
       throw new Error('Playlist not found');
