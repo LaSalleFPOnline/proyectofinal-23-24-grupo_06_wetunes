@@ -46,29 +46,27 @@ export class AppComponent implements OnInit{
     console.log("App lanzada")
     this.authSubscription = this.authService.getAuthStateUser().subscribe(currentUser => {
       if (currentUser) {
-        console.log('Usuario autenticado:', currentUser); // Añadido para verificar que el usuario está autenticado
-        this.firestoreService.retrieveUser(currentUser.uid).then(userData => {
-          this.usuario = {
-            email: currentUser.email ?? '',
-            nombre: userData.nombre ?? 'Nombre no disponible',
-            playlistId: userData.playlistId,
-            sessionId: userData.sessionId
-          };
-          console.log('Datos del usuario cargados:', this.usuario);
-          this.cdr.detectChanges();
-        }).catch(error => {
-          console.error("Error fetching user data:", error);
-        });
+        console.log('Usuario autenticado:', currentUser);
+        this.loadUserData(currentUser.uid);
       } else {
         console.error('No user logged in');
       }
     });
   }
 
-  ngOnDestroy() {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+  loadUserData(uid: string) {
+    this.firestoreService.retrieveUser(uid).then(userData => {
+      this.usuario = {
+        email: userData.email ?? '',
+        nombre: userData.nombre ?? 'Nombre no disponible',
+        playlistId: userData.playlistId,
+        sessionId: userData.sessionId
+      };
+      console.log('Datos del usuario cargados:', this.usuario);
+      this.cdr.detectChanges();
+    }).catch(error => {
+      console.error("Error fetching user data:", error);
+    });
   }
 
 

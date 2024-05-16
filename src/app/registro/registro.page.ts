@@ -7,6 +7,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
 import { UserInterface } from '../interfaces/user.interface';
+import { AppComponent } from '../app.component';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
@@ -21,7 +22,8 @@ export class RegistroPage implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private firestoreService: FirestoreService
+    private firestoreService: FirestoreService,
+    private appComponent: AppComponent
   ) { }
 
   regForm = this.fb.nonNullable.group({
@@ -46,6 +48,7 @@ export class RegistroPage implements OnInit {
           next: async () => {
             this.router.navigateByUrl('/search-page');
             const user = this.authService.getAuthState()
+            this.appComponent.loadUserData(user.uid);
             await this.firestoreService.addUser(usuario, user.uid);
           },
           error: (err) => {
@@ -60,7 +63,7 @@ export class RegistroPage implements OnInit {
   ngOnInit() {
     this.showPassword = false;
   }
-  
+
 
   togglePassword() {
     this.showPassword = !this.showPassword;
