@@ -91,13 +91,13 @@ export class PlaylistPage implements OnInit, AfterViewInit {
   }
 
   async getTrack(songId: string, votes: number, token: string) {
-
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
     // Petición HTTP GET para obtener las pistas más populares del artista
     this.http.get(`https://api.spotify.com/v1/tracks/${songId}`, { headers })
       .subscribe((data: any) => {
+        // Le añadimos el atributo votes
         data.votes = votes;
         // Asignación de las pistas obtenidas al array de tracks
         this.tracks.push(data);
