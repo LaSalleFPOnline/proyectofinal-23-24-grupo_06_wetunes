@@ -193,7 +193,7 @@ export class FirestoreService {
     }
   }
 
-  //ERIC: Código para votar canciones
+  // Código para votar canciones
   async voteSong(playlistId: string, songId: string): Promise<void> {
     try {
       const playlistDocRef = doc(this.firestore, 'playlists', playlistId);
