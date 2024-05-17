@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
 import { SessionInterface } from '../interfaces/session.interface';
@@ -20,7 +19,6 @@ export class SessionPage implements OnInit {
   isSessionAdmin: boolean = false;  // Estado para saber si el usuario es el administrador de la sesión
 
   constructor(
-    private http: HttpClient,
     public toastController: ToastController,  // Servicio de Ionic para mostrar notificaciones
     public authService: AuthService,  // Servicio para manejar la autenticación
     public fireStoreService: FirestoreService  // Servicio para interactuar con Firestore
@@ -34,11 +32,11 @@ export class SessionPage implements OnInit {
   async checkSessionStatus(): Promise<void> {
     const userId = this.authService.getAuthState().uid;  // Obtiene el UID del usuario autenticado
     const user = await this.fireStoreService.retrieveUser(userId);  // Recupera los datos del usuario
-    if(user.sessionId != ''){
+    if (user.sessionId != '') {
       this.sessionId = user.sessionId;
       this.isInSession = true;
       const session = await this.fireStoreService.retrieveSession(user.sessionId);  // Recupera los datos de la sesión
-      if(session.adminUserId == userId) {
+      if (session.adminUserId == userId) {
         this.isSessionAdmin = true;  // Establece al usuario como administrador si coincide con el ID en la sesión
       }
     }
@@ -101,7 +99,7 @@ export class SessionPage implements OnInit {
   }
 
   // Elimina la sesión actual y actualiza el estado del usuario
-  async removeAndExitSession(){
+  async removeAndExitSession() {
     await this.fireStoreService.clearSessionId(this.sessionId);  // Elimina la sesión de Firestore
     this.sessionId = '';
     this.isInSession = false;
@@ -136,5 +134,4 @@ export class SessionPage implements OnInit {
       toast.present();
     }
   }
-
 }
