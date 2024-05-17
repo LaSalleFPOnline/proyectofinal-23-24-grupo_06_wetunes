@@ -1,6 +1,7 @@
-ion-split-pane{
+ion-split-pane {
   --side-max-width: 10%;
 }
+
 ion-header {
   --min-height: 50px;
 }
@@ -15,17 +16,18 @@ ion-header {
 ion-menu {
   ion-content {
     --ion-background-color: var(--gunmetal-2);
+
     ion-item,
     ion-label {
       color: #fffffa;
     }
   }
 }
+
 ion-title {
   color: #fffffa;
 }
-.icon-sesion{
+
+.icon-sesion {
   width: 28px;
 }
-
-
