@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Auth, User, authState, sendEmailVerification, signInWithEmailAndPassword, signOut, updatePassword } from "@angular/fire/auth";
+import { Auth, User, authState, signInWithEmailAndPassword, signOut, updatePassword } from "@angular/fire/auth";
 import { createUserWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
-import { Observable, catchError, from, map } from "rxjs";
-import { updateEmail } from "firebase/auth";
-import { FirestoreService } from "./firestore.service";
+import { Observable, from } from "rxjs";
 
 
 
@@ -12,7 +10,7 @@ import { FirestoreService } from "./firestore.service";
 })
 
 export class AuthService {
-    constructor(private firebaseAuth: Auth, private firestoreService: FirestoreService ) { }
+    constructor(private firebaseAuth: Auth) { }
 
     register(email: string, username: string, passw: string): Observable<void> {
         const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, passw)
