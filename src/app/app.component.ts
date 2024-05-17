@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
 import { IonicModule} from '@ionic/angular';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistroPage } from './registro/registro.page';
 import { LoginPage } from './login/login.page';
@@ -33,7 +33,6 @@ export class AppComponent implements OnInit{
   authSubscription?: Subscription;
 
   constructor(
-    private router: Router,
     public splitPaneService: SplitPaneService,
     private authService: AuthService,
     private firestoreService: FirestoreService,
@@ -54,6 +53,10 @@ export class AppComponent implements OnInit{
     });
   }
 
+  /**
+   * Método para cargar los datos del usuario desde Firestore.
+   * @param uid El ID del usuario cuya información se desea cargar.
+   */
   loadUserData(uid: string) {
     this.firestoreService.retrieveUser(uid).then(userData => {
       this.usuario = {
@@ -69,7 +72,10 @@ export class AppComponent implements OnInit{
     });
   }
 
-
+/**
+ * Método para cerrar la sesión del usuario.
+ * Establece el estado de la división del panel en falso y luego cierra la sesión del usuario utilizando el servicio de autenticación.
+ */
   logout(){
     this.splitPaneService.splitPaneState = false;
     if (this.splitPaneService.splitPaneState === false){
@@ -78,14 +84,12 @@ export class AppComponent implements OnInit{
           window.location.href = '/'; // Redirección a pagina de Login y refresca la pagina.
           // this.router.navigateByUrl('/');
           console.log("Logout success");
-
         },
         error: (error) => {
           console.log('Logout failed', error);
         }
       });
     } else console.log(this.splitPaneService.splitPaneState)
-
   }
 
 
