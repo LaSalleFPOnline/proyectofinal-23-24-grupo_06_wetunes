@@ -1,30 +1,34 @@
-.audio-player-fixed{
-    position: fixed;
-    bottom: 3%;
-    right: 5vw;
-    width: 80%;
-    z-index: 1000;
+.audio-player-fixed {
+  position: fixed;
+  bottom: 3%;
+  right: 5vw;
+  width: 80%;
+  z-index: 1000;
 }
-.ion-list-songs{
+
+.ion-list-songs {
   margin-bottom: 100px;
 }
+
 ion-content {
-  .content{
+  .content {
     margin: 3% 10% 3% 10%;
   }
-  .botonToggle{
+
+  .botonToggle {
     width: 100%;
     display: flex;
     justify-content: flex-end;
   }
 }
 
-ion-button{
+ion-button {
   margin-left: 5px;
 }
 
 ion-list {
-  padding-bottom: 50px; /* Ajusta este valor según el tamaño del reproductor */
+  padding-bottom: 50px;
+  /* Ajusta este valor según el tamaño del reproductor */
 }
 
 .imgTvMode {
@@ -34,13 +38,13 @@ ion-list {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.artistName{
-font-size: 2em;
+.artistName {
+  font-size: 2em;
 }
 
-.trackName{
-font-size: 2em;
-font-weight: 200;
+.trackName {
+  font-size: 2em;
+  font-weight: 200;
 }
 
 #audioPlayer {
@@ -50,7 +54,8 @@ font-weight: 200;
 .containerFooter {
   background-color: #274b59;
   display: flex;
-  align-items: center; /* Centra verticalmente el contenido */
+  align-items: center;
+  /* Centra verticalmente el contenido */
   padding-left: 3vw;
   bottom: 0;
   left: 0;
@@ -62,8 +67,8 @@ font-weight: 200;
 
 .imgPortada {
   flex: 1;
-  
-  img{
+
+  img {
     width: 15%;
     padding: 0;
     border-radius: 10px;
@@ -74,13 +79,13 @@ font-weight: 200;
   flex: 1;
 }
 
-.icon-heart{
+.icon-heart {
   width: 16px;
   fill: white;
 }
 
 @media only screen and (max-width: 768px) {
-  .audio-player-fixed{
+  .audio-player-fixed {
     right: 1vw;
   }
 }
