@@ -26,7 +26,7 @@ export class UserProfilePage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit() {
     const currentUser = this.authService.getAuthState();
@@ -44,6 +44,11 @@ export class UserProfilePage implements OnInit {
     }
   }
 
+  /**
+   * Método para cambiar la contraseña del usuario.
+   * Abre un cuadro de diálogo que solicita al usuario que ingrese una nueva contraseña. 
+   * Si el usuario proporciona una nueva contraseña válida, se llama al servicio de autenticación para actualizarla.
+   */
   async changePassword() {
     const alert = await this.alertController.create({
       header: 'Change Password',
@@ -86,7 +91,6 @@ export class UserProfilePage implements OnInit {
 
     await alert.present();
   }
-
 
   async showToast(message: string) {
     const toast = await this.toastController.create({
