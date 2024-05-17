@@ -131,7 +131,7 @@ export class FirestoreService {
   // Crea una nueva lista de reproducción con una canción específica
   async createPlaylistWithSong(songId: string): Promise<string> {
 
-    const newPlaylist: PlaylistInterface = { entries: [{songId: songId, votes:0}] };
+    const newPlaylist: PlaylistInterface = { entries: [{ songId: songId, votes: 0 }] };
     const playlistsRef = collection(this.firestore, 'playlists');
     try {
       const docRef = await addDoc(playlistsRef, newPlaylist);
@@ -151,7 +151,7 @@ export class FirestoreService {
     if (docSnapshot.exists()) {
       const playlistData = docSnapshot.data() as PlaylistInterface;
       if (!playlistData.entries.map(e => e.songId).includes(songId)) {
-        playlistData.entries.push({songId: songId, votes: 0})
+        playlistData.entries.push({ songId: songId, votes: 0 })
         await updateDoc(playlistDocRef, { entries: playlistData.entries });
 
       }
