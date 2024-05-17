@@ -60,48 +60,31 @@ export class PlaylistPage implements OnInit, AfterViewInit {
     this.tvMode = !this.tvMode;
   }
 
-  async loadPlaylist(): Promise<void> {
-    this.playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
+  async loadPlaylist() {
+     this.playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
     if (this.playlistId) {
-      const clientId = '0e2fa6d6a1ad4ae4b7d05797746fcaa5';
-      const clientSecret = 'ef98271d9a204ca8acb9689c1d4139e5';
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/x-www-form-urlencoded',
+      this.spotifyService.getAccessToken().subscribe({
+        next: (tokenData) => {
+          this.getTracks(this.playlistId!, tokenData.access_token);
+        },
+        error: (error) => console.error('Error obtaining access token:', error)
       });
-
-      const body = `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`;
-
-      this.http.post('https://accounts.spotify.com/api/token', body, { headers })
-        .subscribe(async (data: any) => {
-          // Esto se ejecuta una vez Spotify responda a nuestra petición de obtener el token
-          console.log('Access token obtained from API Spotify')
-
-          await this.getTracks(this.playlistId || '', data.access_token);
-        });
     }
   }
 
-  async getTracks(playlistId: string, token: string): Promise<void> {
+
+  async getTracks(playlistId: string, token: string) {
     let playlist = await this.fireStoreService.retrievePlaylist(playlistId);
     console.log(playlist);
-
-    playlist.entries.forEach(async e => {
-      await this.getTrack(e.songId, e.votes, token);
-    })
-  }
-
-  async getTrack(songId: string, votes: number, token: string) {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    // Petición HTTP GET para obtener las pistas más populares del artista
-    this.http.get(`https://api.spotify.com/v1/tracks/${songId}`, { headers })
-      .subscribe((data: any) => {
-        // Le añadimos el atributo votes
-        data.votes = votes;
-        // Asignación de las pistas obtenidas al array de tracks
-        this.tracks.push(data);
+    playlist.entries.forEach(entry => {
+      this.spotifyService.getTrackDetails(entry.songId, token).subscribe({
+        next: (trackData) => {
+          trackData.votes = entry.votes; // Adding votes to track data
+          this.tracks.push(trackData);
+        },
+        error: (error) => console.error('Error fetching track details:', error)
       });
+    });
   }
 
   formatMillisecondsToMinutes(milliseconds: number): string {

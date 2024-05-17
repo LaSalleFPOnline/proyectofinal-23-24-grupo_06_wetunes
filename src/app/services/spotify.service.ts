@@ -34,4 +34,11 @@ export class SpotifyService {
     });
     return this.http.get(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`, { headers });
   }
+
+  getTrackDetails(trackId: string, accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`
+    });
+    return this.http.get(`https://api.spotify.com/v1/tracks/${trackId}`, { headers });
+  }
 }
