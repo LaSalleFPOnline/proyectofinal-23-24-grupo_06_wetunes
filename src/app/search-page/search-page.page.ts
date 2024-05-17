@@ -2,13 +2,13 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
 import { Platform } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { playOutline, stopOutline } from 'ionicons/icons';
+import { SpotifyService } from '../services/spotify.service';
 
 @Component({
   selector: 'app-search-page',
@@ -29,10 +29,10 @@ export class TestPagePage implements OnInit, AfterViewInit {
   currentTrackUrl: string | null = null;
 
   constructor(
-    private http: HttpClient,
     public toastController: ToastController,
     public authService: AuthService,
     public fireStoreService: FirestoreService,
+    public spotifyService: SpotifyService,
     public router: Router,
     public platform: Platform) {
     addIcons({ playOutline });
@@ -48,74 +48,31 @@ export class TestPagePage implements OnInit, AfterViewInit {
     console.log('ngAfterViewInit: Audio player is initialized');
   }
 
-  /**
-   * Metodo para autenticarse con la API de Spotify para obtener el ACCESS_TOKEN, que luego es utilizado en una 
-   * llamada subsiguiente para buscar realmente los detalles del artista.
-   * Docs: https://developer.spotify.com/documentation/web-api/tutorials/getting-started
-   * @param artistName 
-   */
+  
   getArtistDetails(artistName: string) {
-    const clientId = '0e2fa6d6a1ad4ae4b7d05797746fcaa5';
-    const clientSecret = 'ef98271d9a204ca8acb9689c1d4139e5';
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
+    this.spotifyService.getAccessToken().subscribe({
+      next: tokenData => {
+        this.spotifyService.searchArtist(artistName, tokenData.access_token).subscribe({
+          next: data => {
+            this.artist = data.artists.items[0]?.name || 'Artist not found';
+            if (this.artist !== 'Artist not found') {
+              this.getArtistTracks(data.artists.items[0].id, tokenData.access_token);
+            }
+          },
+          error: error => console.error('Error fetching artist details:', error)
+        });
+      },
+      error: error => console.error('Error obtaining access token:', error)
     });
-    const body = `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`;
-
-    /*Se realiza una solicitud POST a la URL de la API de Spotify para obtener el ACCESS_TOKEN. 
-      Usa las cabeceras y el cuerpo configurados anteriormente.*/
-    this.http.post('https://accounts.spotify.com/api/token', body, { headers })
-      .subscribe((data: any) => {
-        //console.log('Access token obtained from API Spotify')
-        // console.log(data) // Pintamos el token por consola - OPCIONAL
-        console.log(artistName)
-        artistName = this.artistName;
-        this.searchArtist(artistName, data.access_token);
-      });
   }
 
-  /**
-   * Metodo hacer la conexión entre el cliente (la aplicación) y un servicio web externo para acceder a datos concretos (canciones)
-   * basados en el nombre del artista
-   * @param artistName 
-   * @param token 
-   */
-  private searchArtist(artistName: string, token: string) {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    // Aqui preparamos la petición en la que buscamos el nombre del artista y especificamos que estamos buscando un artista (&type=artist)
-    // Docs https://developer.spotify.com/documentation/web-api/reference/search
-    this.http.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist`, { headers })
-      .subscribe((data: any) => {
-        console.log('Data obtained from Spotify API')
-        console.log(data)
-        this.artist = data.artists.items[0]?.name || 'Artist not found';
-
-        // Si se encuentra un artista, se llama al método para obtener las canciones
-        if (this.artist !== 'Artist not found') {
-          this.getArtistTracks(data.artists.items[0].id, token);
-        }
-      });
-  }
-
-  /**
-   *  Metodo para recuperar las pistas más populares de un artista específico utilizando la API de Spotify
-   * @param artistId 
-   * @param token 
-   */
-  private getArtistTracks(artistId: string, token: string) {
-    // Encabezados de la solicitud HTTP con el token de autorización
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    // Petición HTTP GET para obtener las pistas más populares del artista
-    this.http.get(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`, { headers })
-      .subscribe((data: any) => {
-        // Asignación de las pistas obtenidas al array de tracks
+  getArtistTracks(artistId: string, accessToken: string) {
+    this.spotifyService.getArtistTracks(artistId, accessToken).subscribe({
+      next: data => {
         this.tracks = data.tracks;
-      });
+      },
+      error: error => console.error('Error fetching tracks:', error)
+    });
   }
 
   formatMillisecondsToMinutes(milliseconds: number): string {
