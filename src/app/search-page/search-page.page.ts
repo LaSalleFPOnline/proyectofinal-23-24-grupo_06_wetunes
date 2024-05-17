@@ -48,7 +48,11 @@ export class TestPagePage implements OnInit, AfterViewInit {
     console.log('ngAfterViewInit: Audio player is initialized');
   }
 
-  
+  /**
+   * Obtiene detalles del artista especificado a través del nombre del artista utilizando la API de Spotify.
+   * Si encuentra al artista, procede a obtener las pistas más populares de dicho artista.
+   * @param artistName El nombre del artista a buscar.
+   */
   getArtistDetails(artistName: string) {
     this.spotifyService.getAccessToken().subscribe({
       next: tokenData => {
@@ -66,6 +70,11 @@ export class TestPagePage implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Solicita y recupera las pistas más populares de un artista específico usando su ID y un token de acceso.
+   * @param artistId El identificador único del artista en Spotify.
+   * @param accessToken El token de acceso necesario para autenticar la solicitud en la API de Spotify.
+   */
   getArtistTracks(artistId: string, accessToken: string) {
     this.spotifyService.getArtistTracks(artistId, accessToken).subscribe({
       next: data => {
@@ -94,7 +103,7 @@ export class TestPagePage implements OnInit, AfterViewInit {
    */
   async addTrackToPlaylist(songId: string) {
     /*
-    Obteniendo el ID de la playlist del usuario actual utilizando el servicio fireStoreService 
+    Para obtener el ID de la playlist del usuario actual utilizamos el servicio fireStoreService 
     que a su vez recoge el ID de usuario autenticado mediante 'authService.getAuthState().uid'
     */
     const playlistId = await this.fireStoreService.getUserPlaylistId(this.authService.getAuthState().uid);
