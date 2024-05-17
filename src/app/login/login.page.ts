@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -32,10 +32,8 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.splitPaneService.getSplitPane();
-    const showPassword = false;
   }
-
-
+  
   /**
    * Este metodo obtiene los valores del formulario y los pasa como parametros al metodo 'login()' de 'authService'.
    * En caso de una autenticación exitosa se redirige al usuario a la pagina principal de la aplicación.
@@ -62,6 +60,22 @@ export class LoginPage implements OnInit {
       });
   }
 
+  /**
+   * Metodo que envía un enlace de restablecimiento de contraseña al email especificado en el formulario.
+   */
+  forgotPassword() {
+    const emailControl = this.logForm.get('email');
+
+    if (emailControl && emailControl.value) {
+      this.authService.resetPassword(emailControl.value).subscribe({
+        next: () => alert('Por favor revisa tu correo para restablecer tu contraseña.'),
+        error: (error) => alert('Error enviando correo de recuperación: ' + error)
+      });
+    } else {
+      alert('Por favor ingresa tu correo electrónico.');
+    }
+  }
+
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
@@ -74,18 +88,4 @@ export class LoginPage implements OnInit {
     });
     toast.present();
   }
-
-  forgotPassword() {
-    const emailControl = this.logForm.get('email');
-
-    if (emailControl && emailControl.value) {
-        this.authService.resetPassword(emailControl.value).subscribe({
-            next: () => alert('Por favor revisa tu correo para restablecer tu contraseña.'),
-            error: (error) => alert('Error enviando correo de recuperación: ' + error)
-        });
-    } else {
-        alert('Por favor ingresa tu correo electrónico.');
-    }
-}
-
 }
