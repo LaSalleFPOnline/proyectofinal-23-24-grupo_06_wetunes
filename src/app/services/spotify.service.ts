@@ -1,27 +1,37 @@
-// src/app/spotify.service.ts
+// spotify.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Servicio marcado para ser provisto en la raíz del injector de la aplicación.
 @Injectable({
   providedIn: 'root',
 })
 export class SpotifyService {
-  // Inyecta el cliente HTTP de Angular para realizar solicitudes HTTP.
+  private clientId = '0e2fa6d6a1ad4ae4b7d05797746fcaa5';
+  private clientSecret = 'ef98271d9a204ca8acb9689c1d4139e5';
+  
   constructor(private http: HttpClient) {}
 
-  /**
-   * Obtiene los datos de una pista específica de Spotify utilizando un token de acceso y el ID de la pista.
-   * @param access_token Token de acceso OAuth proporcionado por Spotify para autenticar la solicitud.
-   * @param trackId El ID de la pista que se desea recuperar de Spotify.
-   * @returns Observable que emitirá la respuesta de la API de Spotify para la pista solicitada.
-   */
-  getTrack(access_token: string, trackId: string): Observable<any> {
-    return this.http.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
-      headers: {
-        Authorization: `Bearer ${access_token}`  // Usa el token de acceso para autorizar la solicitud.
-      }
+  getAccessToken(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
     });
+    const body = `grant_type=client_credentials&client_id=${this.clientId}&client_secret=${this.clientSecret}`;
+
+    return this.http.post('https://accounts.spotify.com/api/token', body, { headers });
+  }
+
+  searchArtist(artistName: string, accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`
+    });
+    return this.http.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist`, { headers });
+  }
+
+  getArtistTracks(artistId: string, accessToken: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`
+    });
+    return this.http.get(`https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=ES`, { headers });
   }
 }
