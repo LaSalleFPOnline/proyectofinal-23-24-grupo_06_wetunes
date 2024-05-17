@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { FirestoreService } from '../services/firestore.service';
 import { UserInterface } from '../interfaces/user.interface';
@@ -34,6 +34,14 @@ export class RegistroPage implements OnInit {
 
   errorMessage: string | null = null;
 
+  ngOnInit() {
+    this.showPassword = false;
+  }
+
+  /**
+   * Procesa el formulario de registro del usuario. Si el formulario es válido, extrae los datos, crea un objeto usuario,
+   * y utiliza authService para registrar el usuario.
+   */
   async onSubmit() {
     if (this.regForm.valid) {
       const rawForm = this.regForm.getRawValue();
@@ -59,11 +67,6 @@ export class RegistroPage implements OnInit {
 
     }
   }
-
-  ngOnInit() {
-    this.showPassword = false;
-  }
-
 
   togglePassword() {
     this.showPassword = !this.showPassword;
