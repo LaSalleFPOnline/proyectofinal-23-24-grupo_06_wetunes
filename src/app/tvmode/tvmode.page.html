@@ -4,20 +4,17 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="content" [fullscreen]="true" >
-
-
+<ion-content class="content" [fullscreen]="true">
   <!-- Sección para mostrar las canciones -->
-  <ion-list *ngIf="tracks.length > 0" >
+  <ion-list *ngIf="tracks.length > 0">
     <ion-item style="margin-bottom: 50px;" *ngFor="let track of tracks">
-        <!-- Añadir la imagen del álbum usando track.album.images[2].url -->
-        <img *ngIf="track.album && track.album.images && track.album.images.length > 2" 
-             [src]="track.album.images[0].url" 
-             [alt]="track.name + ' album cover'">
-        <div style="margin-left: 30px; margin-bottom: 150px;">
-          <div class="artistName">{{ artist }}</div>
-          <div class="trackName">{{ track.name }}</div>
-        </div>
+      <!-- Añadir la imagen del álbum usando track.album.images[2].url -->
+      <img *ngIf="track.album && track.album.images && track.album.images.length > 2" [src]="track.album.images[0].url"
+        [alt]="track.name + ' album cover'">
+      <div style="margin-left: 30px; margin-bottom: 150px;">
+        <div class="artistName">{{ artist }}</div>
+        <div class="trackName">{{ track.name }}</div>
+      </div>
     </ion-item>
   </ion-list>
 </ion-content>
